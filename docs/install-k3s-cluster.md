@@ -49,3 +49,32 @@ my-nginx-1-6d9577949b-98hzv   1/1     Running   0          105s
 my-nginx-2-cd544c6f7-sf68x    1/1     Running   0          91s
 my-nginx-2-cd544c6f7-zm974    1/1     Running   0          91s
 ```
+
+## 复制 k3s config 文件
+
+之后将使用 config 文件的访问链接访问 k3s 集群。 
+
+下载 config  `/etc/rancher/k3s/k3s.yaml` 文件到本地， 并修改链接地址。
+
+```yaml
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: XXXXXXyyyyzzzzz
+    server: https://your-k3s-host:6443
+  name: default
+# ... 省略
+```
+
+## 目录结构
+
+```bash
+# tree
+.
+├── README.md
+├── cmd
+│   └── k8sailor
+│       ├── k8sconfig
+│       │   └── config.yml
+│       └── main.go
+```
