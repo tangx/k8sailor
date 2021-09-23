@@ -1,11 +1,13 @@
 # 搭建 k3s 集群
 
-安装过程参考
+tag [cobra-command](https://github.com/tangx/k8sailor/tree/feat/01-cobra-command)
+
+## 安装
+
+k3s 安装过程参考
 
 > https://tangx.in/2021/06/07/k3s-architecture-single-server/
 
-
-## 安装
 
 k3s 集群版本为 v1.21.4。 因此 k8s client-go sdk 的版本也需要安装对应版本
 

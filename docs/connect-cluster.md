@@ -1,5 +1,8 @@
 # 连接 k3s 集群
 
+tag [cobra-command](https://github.com/tangx/k8sailor/tree/feat/02-connect-cluster)
+
+
 使用 sdk 链接 k3s cluster 并获取 deployment 信息
 
 ```bash
@@ -22,16 +25,17 @@ go get k8s.io/client-go@v0.21.4
 go mod edit -replace=k8s.io/client-go=k8s.io/client-go@v0.21.4
 ```
 
-
-
 ## 连接集群并获取 deployment
 
 > https://github.com/kubernetes/client-go/blob/master/examples/create-update-delete-deployment/main.go
 
 
-参考官方 demo, 修改一下 kubeconfig 配置来源地址
+连接到 cluster 的鉴权方式有多种， 后面可以根据 cobra 传递的参数值， 选择不同的鉴权方式。
+这里直接参考官方 demo 使用配置文件方式鉴权。
 
-[k8s cluster.go](../pkg/k8s/cluster.go)
+修改一下 kubeconfig 配置来源地址。
+
+[pkg/k8s/cluster.go](../pkg/k8s/cluster.go)
 
 ```go
 
