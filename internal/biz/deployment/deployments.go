@@ -1,11 +1,30 @@
 package deployment
 
-import "github.com/tangx/k8sailor/internal/k8sdao"
+import (
+	"github.com/tangx/k8sailor/internal/k8sdao"
+	corev1 "k8s.io/api/core/v1"
+)
 
 type Deployment struct {
-	Name      string `json:"name,omitempty"`
-	Namespace string `json:"namespace,omitempty"`
-	Replicas  int32  `json:"replicas,omitempty"`
+	Name      string `json:"name"`
+	Namespace string `json:"namespace"`
+
+	// Replicas 实际期望的 pod 数量
+	Replicas int32 `json:"replicas"`
+
+	// 镜像列表
+	Images []string `json:"images"`
+
+	Status DeploymentStatus `json:"status"`
+}
+
+type DeploymentStatus struct {
+	// 标签匹配的 Pod 数量
+	Replicas int32 `json:"replicas"`
+	// 可用 pod 数量
+	AvailableReplicas int32 `json:"availableReplicas"`
+	// 不可用数量
+	UnavailableReplicas int32 `json:"unavailableReplicas"`
 }
 
 type GetAllDeploymentsInput struct {
@@ -26,8 +45,32 @@ func GetAllDeployments(input GetAllDeploymentsInput) ([]Deployment, error) {
 			Name:      item.Name,
 			Namespace: item.Namespace,
 			Replicas:  *item.Spec.Replicas,
+			Images:    podImages(item.Spec.Template.Spec),
+			Status: DeploymentStatus{
+				Replicas:            item.Status.Replicas,
+				AvailableReplicas:   item.Status.AvailableReplicas,
+				UnavailableReplicas: item.Status.UnavailableReplicas,
+			},
 		}
 	}
 
 	return deps, nil
+}
+
+// 返回 Pod 的镜像列表
+func podImages(podSpec corev1.PodSpec) []string {
+	images := containerImages(podSpec.Containers)
+	initImages := containerImages(podSpec.InitContainers)
+
+	return append(images, initImages...)
+}
+
+// containerImages 返回容器的镜像列表
+func containerImages(containers []corev1.Container) []string {
+	n := len(containers)
+	images := make([]string, n)
+	for i := 0; i < n; i++ {
+		images[i] = containers[i].Image
+	}
+	return images
 }
