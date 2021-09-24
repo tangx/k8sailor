@@ -1,0 +1,3 @@
+k8sailor__HttpServer_Appname: app
+k8sailor__HttpServer_Host: ""
+k8sailor__HttpServer_Port: 80
