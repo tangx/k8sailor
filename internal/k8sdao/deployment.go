@@ -16,5 +16,4 @@ func GetAllDeployments(namespace string) ([]appsv1.Deployment, error) {
 	}
 
 	return v1Deps.Items, nil
-
 }
