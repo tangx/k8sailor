@@ -1,5 +1,8 @@
 # 使用 gin 初始化一个 API Server
 
+> tag: https://github.com/tangx/k8sailor/tree/feat/04-httpserver-initial
+
+
 ```bash
 cd cmd/k8sailor && go run . httpserver
 

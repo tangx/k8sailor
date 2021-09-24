@@ -1,5 +1,7 @@
 # 使用 cobra 管理命令与参数
 
+> tag: https://github.com/tangx/k8sailor/tree/feat/01-cobra-command
+
 为了更加方便的管理配置文件的来源， 这里使用 [cobra](https://github.com/spf13/cobra) 进行命令行构建
 
 效果如下
@@ -36,7 +38,7 @@ var Flags = &CmdFlags{
 
 ### cobra
 
-在 `cmd/k8sailor/cmd` 中管理所有 cobra 命令。 [root.go](../cmd/k8sailor/cmd/root.go)
+在 `cmd/k8sailor/cmd` 中管理所有 cobra 命令。 [root.go](/cmd/k8sailor/cmd/root.go)
 
 在代码中使用了 [cobrautils](https://github.com/go-jarvis/cobrautils) 库帮助管理 flag 绑定。
 
@@ -48,7 +50,7 @@ func init() {
 
 ### 启动
 
-在 [main.go](../cmd/k8sailor/main.go) 调用 `cmd/root.go` 的启动函数。 运行结果如上所示。
+在 [main.go](/cmd/k8sailor/main.go) 调用 `cmd/root.go` 的启动函数。 运行结果如上所示。
 
 
 ## 目录结构
