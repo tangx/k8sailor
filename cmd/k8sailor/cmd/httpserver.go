@@ -3,8 +3,8 @@ package cmd
 import (
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-	"github.com/tangx/k8sailor/cmd/k8sailor/apis"
 	"github.com/tangx/k8sailor/cmd/k8sailor/global"
+	"github.com/tangx/k8sailor/internal/apis"
 )
 
 var cmdHttpserver = &cobra.Command{
