@@ -27,7 +27,6 @@ Global Flags:
 [GIN-debug] GET    /k8sailor/v0/ping         --> github.com/tangx/k8sailor/cmd/k8sailor/apis.RootGroup.func1 (3 handlers)
 [GIN-debug] Listening and serving HTTP on :8088
 ```
-
 ## 创建 pkg/confgin 初始化配置文件
 
 为了方便服务配置管理， 将使用 [使用 jarvis 初始化配置](#使用 jarvis 初始化配置)
