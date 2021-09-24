@@ -1,0 +1,3 @@
+
+### GET deployment by name
+GET http://127.0.0.1:8088/k8sailor/v0/deployments/my-nginx-01
