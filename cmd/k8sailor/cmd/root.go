@@ -4,7 +4,6 @@ import (
 	"github.com/go-jarvis/cobrautils"
 	"github.com/spf13/cobra"
 	"github.com/tangx/k8sailor/cmd/k8sailor/global"
-	"github.com/tangx/k8sailor/pkg/k8s"
 )
 
 var rootCmd = &cobra.Command{
@@ -16,12 +15,14 @@ var rootCmd = &cobra.Command{
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		// 什么也不做
-		k8s.Connent()
+		// k8s.Connent()
 	},
 }
 
 func init() {
 	cobrautils.BindFlags(rootCmd, global.Flags)
+
+	rootCmd.AddCommand(cmdHttpserver)
 }
 
 func Execute() {

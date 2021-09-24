@@ -1,7 +1,5 @@
 # 搭建 k3s 集群
 
-tag [cobra-command](https://github.com/tangx/k8sailor/tree/feat/01-cobra-command)
-
 ## 安装
 
 k3s 安装过程参考

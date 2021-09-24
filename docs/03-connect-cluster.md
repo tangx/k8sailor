@@ -1,6 +1,6 @@
 # 连接 k3s 集群
 
-tag [cobra-command](https://github.com/tangx/k8sailor/tree/feat/02-connect-cluster)
+> tag: https://github.com/tangx/k8sailor/tree/feat/02-connect-cluster
 
 
 使用 sdk 链接 k3s cluster 并获取 deployment 信息
@@ -35,7 +35,7 @@ go mod edit -replace=k8s.io/client-go=k8s.io/client-go@v0.21.4
 
 修改一下 kubeconfig 配置来源地址。
 
-[pkg/k8s/cluster.go](../pkg/k8s/cluster.go)
+[pkg/k8s/cluster.go](/pkg/k8s/cluster.go)
 
 ```go
 
