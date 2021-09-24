@@ -1,3 +1,4 @@
 k8sailor__HttpServer_Appname: app
 k8sailor__HttpServer_Host: ""
 k8sailor__HttpServer_Port: 80
+k8sailor__KubeClient_KubeConfig: ./k8sconfig/config.yml

@@ -5,6 +5,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/tangx/ginbinder"
+	"github.com/tangx/k8sailor/internal/biz/deployment"
 	"github.com/tangx/k8sailor/pkg/confgin/httpresponse"
 )
 
@@ -13,7 +15,7 @@ func DeploymentRouterGroup(base *gin.RouterGroup) {
 	deployment := base.Group("/deployments")
 	{
 		// 针对 所有 deployment 操作
-		deployment.GET("/", GetAllDeployments)
+		deployment.GET("/", handlerGetAllDeployments)
 
 		// 针对特定的命名资源操作
 		deployment.GET("/:name", func(c *gin.Context) {
@@ -23,6 +25,19 @@ func DeploymentRouterGroup(base *gin.RouterGroup) {
 	}
 }
 
-func GetAllDeployments(c *gin.Context) {
+func handlerGetAllDeployments(c *gin.Context) {
+	params := &deployment.GetAllDeploymentsInput{}
+	err := ginbinder.ShouldBindRequest(c, params)
+	if err != nil {
+		httpresponse.Error(c, http.StatusBadRequest, err)
+		return
+	}
 
+	deps, err := deployment.GetAllDeployments(*params)
+	if err != nil {
+		httpresponse.Error(c, http.StatusInternalServerError, err)
+		return
+	}
+
+	httpresponse.OK(c, deps)
 }

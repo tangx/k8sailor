@@ -1,9 +1,7 @@
 package cmd
 
 import (
-	"github.com/go-jarvis/cobrautils"
 	"github.com/spf13/cobra"
-	"github.com/tangx/k8sailor/cmd/k8sailor/global"
 )
 
 var rootCmd = &cobra.Command{
@@ -20,7 +18,7 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	cobrautils.BindFlags(rootCmd, global.Flags)
+	// cobrautils.BindFlags(rootCmd, global.Flags)
 
 	rootCmd.AddCommand(cmdHttpserver)
 }
