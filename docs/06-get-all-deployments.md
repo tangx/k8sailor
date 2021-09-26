@@ -1,4 +1,4 @@
-# 获取所有 deployments 数据
+# 使用 api/biz/dao 分层结构管理数据请求，获取 deployment 数据
 
 > tag: https://github.com/tangx/k8sailor/tree/feat/06-get-all-deployments
 

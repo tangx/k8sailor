@@ -18,7 +18,7 @@ golang 练习的前后端
 
 ### 数据获取
 
-1. [获取 deployment 数据](/docs/06-get-all-deployments.md)
+1. [使用 api/biz/dao 分层结构管理数据请求，获取 deployment 数据](/docs/06-get-all-deployments.md)
 
 ## feed
 
