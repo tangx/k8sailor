@@ -51,3 +51,7 @@ func (s *Server) RegisterRoute(registerFunc func(rg *gin.RouterGroup)) {
 	// 注册业务子路由
 	registerFunc(base)
 }
+
+func AppendGroup(base *gin.RouterGroup, register func(base *gin.RouterGroup)) {
+	register(base)
+}

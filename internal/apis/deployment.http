@@ -1,0 +1,3 @@
+
+### GET all deployments
+GET http://127.0.0.1:8088/k8sailor/v0/deployments?namespace=default
