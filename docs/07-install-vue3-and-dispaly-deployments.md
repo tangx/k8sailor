@@ -76,3 +76,7 @@ yarn add axios
 
 创建 [/webapp/src/apis](/webapp/src/apis) 目录， 用于存放所有针对 k8sailor 后端的数据请求
 
+
+## 问题遗留
+
+### 301 重定向遇到跨域问题。
