@@ -19,6 +19,7 @@ func GetPodByLabels(namespace string, labels map[string]string) (*corev1.PodList
 	return clientset.CoreV1().Pods(namespace).List(ctx, opts)
 }
 
+// convertMapToSelector convert map to string, use comma connection: k1=v1,k2=v2
 func convertMapToSelector(labels map[string]string) string {
 	l := []string{}
 	for k, v := range labels {
