@@ -1,35 +1,31 @@
 <template>
-<h3>hello deployments</h3>
-
-{{ hello }}
-
-{{ data.items }}
+<h3>deployments</h3>
 
 <table class="table">
   <thead>
     <tr>
       <th scope="col">#</th>
-      <th scope="col">Active</th>
-      <th scope="col">Name</th>
-      <th scope="col">Replicas</th>
-      <th scope="col">Images</th>
-      <th scope="col">Status<hr>replicas/availableReplicas/unavailableReplicas</th>
+      <th scope="col">可用性</th>
+      <th scope="col">名字</th>
+      <th scope="col">Namespace</th>
+      <th scope="col">期望副本数量</th>
+      <th scope="col">镜像列表</th>
+      <th scope="col">Pod 总数/可用/不可用</th>
     </tr>
   </thead>
   <tbody>
     <tr v-for="(item,id) in data.items" key=:id>
       <th scope="row">{{ id }}</th>
-      <td>active</td>
+      <td>{{ isActived(item.replicas,item.status.availableReplicas) }}</td>
       <td>{{ item.name }}</td>
+      <td>{{ item.namespace }}</td>
       <td>{{ item.replicas }}</td>
-      <td>{{ item.images }}</td>
+      <td >{{ imagesJoin(item.images) }}</td>
       <td>
         <span>{{ item.status.replicas }}</span> <span>/</span> 
         <span>{{ item.status.availableReplicas }}</span> <span>/</span> 
         <span>{{ item.status.unavailableReplicas }}</span>
-
       </td>
-      
     </tr>
   </tbody>
 </table>
@@ -45,18 +41,24 @@ let data = reactive({
   items: [] as DeploymentItem[]
 })
 
-
-
-const getAll= async function() {
-  const resp=await client.getAllDeployments("default")
-
+// getAll 返回所有 deployment 清单
+const getAllByNamespace= async function(namespace="default") {
+  const resp=await client.getAllDeployments(namespace)
   data.items=resp.data
-  
 }
 
+// imagesJoin 将镜像列表数组连接并返回成字符串
+const imagesJoin=function(images:string[]):string{
+  return images.join(",")
+}
+
+// isActived 判断 deployment 是否处于可用状态
+const isActived=function(replicas:number,availableReplicas:number):boolean{
+  return replicas===availableReplicas
+}
 
 onMounted(()=>{
-  getAll()
+  getAllByNamespace()
 })
 
 const hello="123"
