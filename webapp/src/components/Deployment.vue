@@ -1,6 +1,12 @@
 <template>
 <h3>deployments</h3>
 
+<div>
+  <label>namespace</label>
+  <input type="text" placeholder="default" v-model="data.namespace">
+  <button @click="getAllByNamespace(data.namespace)">更新数据</button>
+</div>
+
 <!-- 当数据异常的时候显示 -->
 <div class="error-container" v-if="data.error">
   <h3>error</h3>
@@ -42,9 +48,10 @@
 <script setup lang='ts'>
 import {reactive } from '@vue/reactivity'
 import { onMounted } from '@vue/runtime-core'
-import client,{ Deployment,DeploymentItem} from '../apis/deployment'
+import client,{ DeploymentItem } from '../apis/deployment'
 
 let data = reactive({
+  namespace:"default",
   error: "",
   items: [] as DeploymentItem[]
 })
@@ -70,7 +77,7 @@ onMounted(()=>{
   getAllByNamespace()
 })
 
-const hello="123"
+
 </script>
 
 <style lang='less' scoped>
