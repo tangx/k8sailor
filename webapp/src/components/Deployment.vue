@@ -1,7 +1,14 @@
 <template>
 <h3>deployments</h3>
 
-<table class="table">
+<!-- 当数据异常的时候显示 -->
+<div class="error-container" v-if="data.error">
+  <h3>error</h3>
+  <h3>{{ data.error }}</h3>
+</div>
+
+<!-- 当数据正常的时候显示 -->
+<table class="table" v-if="!data.error">
   <thead>
     <tr>
       <th scope="col">#</th>
@@ -38,6 +45,7 @@ import { onMounted } from '@vue/runtime-core'
 import client,{ Deployment,DeploymentItem} from '../apis/deployment'
 
 let data = reactive({
+  error: "",
   items: [] as DeploymentItem[]
 })
 
@@ -45,6 +53,7 @@ let data = reactive({
 const getAllByNamespace= async function(namespace="default") {
   const resp=await client.getAllDeployments(namespace)
   data.items=resp.data
+  data.error=resp.error
 }
 
 // imagesJoin 将镜像列表数组连接并返回成字符串
