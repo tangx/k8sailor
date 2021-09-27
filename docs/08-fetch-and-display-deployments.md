@@ -1,5 +1,7 @@
 # 获取并展示 Deployments 信息
 
+> tag: https://github.com/tangx/k8sailor/tree/feat/08-fetch-and-display-deployments
+
 
 ![display-deployments.png](/docs/assets/img/08/display-deployments.png)
 
