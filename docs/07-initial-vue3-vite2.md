@@ -1,7 +1,5 @@
-# 初始化 vue3+vite 并且展示 deployments 数据
+# 初始化 vue3+vite
 
-
-## 安装 vue3+vite
 
 ## 安装
 
@@ -64,19 +62,3 @@ yarn dev
 
 朴实无华的界面。
 
-
-## 使用 Axios 请求 Deployments 数据
-
-安装 axios 客户端
-
-```bash
-# 安装 axios
-yarn add axios
-```
-
-创建 [/webapp/src/apis](/webapp/src/apis) 目录， 用于存放所有针对 k8sailor 后端的数据请求
-
-
-## 问题遗留
-
-### 301 重定向遇到跨域问题。

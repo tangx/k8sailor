@@ -46,10 +46,10 @@ func (s *Server) Run() error {
 // RegisterRoute 注册
 func (s *Server) RegisterRoute(registerFunc func(rg *gin.RouterGroup)) {
 
-	// 允许跨域
-	// s.engine.Use(cors())
 	// 注册以服务名为根的路由信息，方便在 k8s ingress 中做转发
 	base := s.engine.Group(s.Appname)
+
+	// 针对 appname 下的路由，允许跨域
 	base.Use(cors())
 
 	// 注册业务子路由

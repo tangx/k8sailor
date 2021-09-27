@@ -18,7 +18,7 @@
   <thead>
     <tr>
       <th scope="col">#</th>
-      <th scope="col">可用性</th>
+      <th scope="col">状态</th>
       <th scope="col">名字</th>
       <th scope="col">Namespace</th>
       <th scope="col">期望副本数量</th>
