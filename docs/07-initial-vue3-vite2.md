@@ -20,7 +20,7 @@ yarn dev
 yarn add less
 ```
 
-### 清理环境
+## 清理环境
 
 1. 删除 `/webapp/src/components` 下的 `HelloWorld.vue`。
 并新建一个 `Deployment.vue`。 这里使用 vue3 的 `setup` 语法糖。
