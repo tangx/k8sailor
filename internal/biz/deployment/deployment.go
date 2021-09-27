@@ -1,8 +1,9 @@
 package deployment
 
 import (
+	"github.com/tangx/k8sailor/internal/biz/pod"
 	"github.com/tangx/k8sailor/internal/k8sdao"
-	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 type Deployment struct {
@@ -16,6 +17,8 @@ type Deployment struct {
 	Images []string `json:"images"`
 
 	Status DeploymentStatus `json:"status"`
+
+	LabelSelector *metav1.LabelSelector
 }
 
 type DeploymentStatus struct {
@@ -32,45 +35,28 @@ type GetAllDeploymentsInput struct {
 }
 
 // GetAllDeployments 获取 namespace 下的所有 deployments
-func GetAllDeployments(input GetAllDeploymentsInput) ([]Deployment, error) {
+func GetAllDeployments(input GetAllDeploymentsInput) ([]*Deployment, error) {
 
 	v1Deps, err := k8sdao.GetAllDeployments(input.Namespace)
 	if err != nil {
 		return nil, err
 	}
 
-	deps := make([]Deployment, len(v1Deps))
+	deps := make([]*Deployment, len(v1Deps))
 	for i, item := range v1Deps {
-		deps[i] = Deployment{
+		deps[i] = &Deployment{
 			Name:      item.Name,
 			Namespace: item.Namespace,
 			Replicas:  *item.Spec.Replicas,
-			Images:    podImages(item.Spec.Template.Spec),
+			Images:    pod.PodImages(item.Spec.Template.Spec),
 			Status: DeploymentStatus{
 				Replicas:            item.Status.Replicas,
 				AvailableReplicas:   item.Status.AvailableReplicas,
 				UnavailableReplicas: item.Status.UnavailableReplicas,
 			},
+			LabelSelector: item.Spec.Selector,
 		}
 	}
 
 	return deps, nil
-}
-
-// 返回 Pod 的镜像列表
-func podImages(podSpec corev1.PodSpec) []string {
-	images := containerImages(podSpec.Containers)
-	initImages := containerImages(podSpec.InitContainers)
-
-	return append(images, initImages...)
-}
-
-// containerImages 返回容器的镜像列表
-func containerImages(containers []corev1.Container) []string {
-	n := len(containers)
-	images := make([]string, n)
-	for i := 0; i < n; i++ {
-		images[i] = containers[i].Image
-	}
-	return images
 }
