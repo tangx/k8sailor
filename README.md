@@ -19,8 +19,8 @@ golang 练习的前后端
 ### 数据获取
 
 1. [使用 api/biz/dao 分层结构管理数据请求，获取 deployment 数据](/docs/06-get-all-deployments.md)
-2. [初始化 vue3 + vite2](/docs/07-initial-vue3-vite2.md)
-3. [获取并展示 deployments 信息](/docs/08-fetch-and-display-deployments.md)
+2. [vue3 - 初始化 vue3 + vite2](/docs/07-initial-vue3-vite2.md)
+3. [vue3 - 获取并展示 deployments 信息](/docs/08-fetch-and-display-deployments.md)
 
 ## feed
 
