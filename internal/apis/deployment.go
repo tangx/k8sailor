@@ -15,7 +15,7 @@ func DeploymentRouterGroup(base *gin.RouterGroup) {
 	deployment := base.Group("/deployments")
 	{
 		// 针对 所有 deployment 操作
-		deployment.GET("/", handlerGetAllDeployments)
+		deployment.GET("", handlerGetAllDeployments)
 
 		// 针对特定的命名资源操作
 		deployment.GET("/:name", func(c *gin.Context) {
