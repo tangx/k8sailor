@@ -1,5 +1,7 @@
 # 通过 deployment label 获取 pod 信息
 
+> tag: https://github.com/tangx/k8sailor/tree/feat/09-get-pods-by-deployment-label
+
 有了之前结构铺垫， 获取 Pod 还是很简单简单的。 其中需要注意的是 `ListOptions` 中的 `LabelSelector` 是一个字符串， 多组 `key=value` 之间使用 **逗号 `,`** 进行连接。
 
 ```go
