@@ -41,6 +41,12 @@
       </td>
     </tr>
   </tbody>
+
+  <hr>
+
+      <div class="view-container">
+      <router-view />
+    </div>
 </table>
 
 </template>
@@ -48,7 +54,7 @@
 <script setup lang='ts'>
 import {reactive } from '@vue/reactivity'
 import { onMounted } from '@vue/runtime-core'
-import client,{ DeploymentItem } from '../apis/deployment'
+import client,{ DeploymentItem } from '../../apis/deployment'
 
 let data = reactive({
   namespace:"default",
