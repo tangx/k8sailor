@@ -11,27 +11,27 @@ import (
 )
 
 func DeploymentRouterGroup(base *gin.RouterGroup) {
-	// 创建 d 路由组
-	d := base.Group("/deployments")
+	// 创建 dep 路由组
+	dep := base.Group("/deployments")
 	{
 		// 针对 所有 deployment 操作
-		d.GET("", handlerGetAllDeployments)
+		dep.GET("", handlerGetAllDeployments)
 
 		// 针对特定的命名资源操作
-		d.GET("/:name", handlerGetPodsByDeployment)
+		dep.GET("/:name", handlerGetPodsByDeployment)
 	}
 }
 
 // handlerGetAllDeployments 获取所有 deployments
 func handlerGetAllDeployments(c *gin.Context) {
-	params := &deployment.GetAllDeploymentsInput{}
+	params := &deployment.ListDeploymentsInput{}
 	err := ginbinder.ShouldBindRequest(c, params)
 	if err != nil {
 		httpresponse.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
-	deps, err := deployment.GetAllDeployments(*params)
+	deps, err := deployment.ListDeployments(*params)
 	if err != nil {
 		httpresponse.Error(c, http.StatusInternalServerError, err)
 		return
@@ -41,17 +41,25 @@ func handlerGetAllDeployments(c *gin.Context) {
 }
 
 func handlerGetPodsByDeployment(c *gin.Context) {
-	params := &pod.GetPodsByLabelsInput{}
-	err := ginbinder.ShouldBindRequest(c, params)
+	input := deployment.GetDeploymentByNameInput{}
+	err := ginbinder.ShouldBindRequest(c, &input)
 	if err != nil {
 		httpresponse.Error(c, http.StatusBadRequest, err)
 		return
 	}
-
-	pods, err := pod.GetPodsByLabels(*params)
+	dep, err := deployment.GetDeploymentByName(c, input)
 	if err != nil {
 		httpresponse.Error(c, http.StatusInternalServerError, err)
 		return
+	}
+
+	pInput := pod.GetPodsByLabelsInput{
+		Namespace: dep.Namespace,
+		Labels:    dep.LabelSelector.MatchLabels,
+	}
+	pods, err := pod.GetPodsByLabels(pInput)
+	if err != nil {
+		httpresponse.Error(c, http.StatusInternalServerError, err)
 	}
 
 	httpresponse.OK(c, pods)

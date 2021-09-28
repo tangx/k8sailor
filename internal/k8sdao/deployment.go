@@ -7,13 +7,14 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func GetAllDeployments(namespace string) ([]appsv1.Deployment, error) {
+func ListDeployments(namespace string) (*appsv1.DeploymentList, error) {
 	ctx := context.TODO()
 	opts := metav1.ListOptions{}
-	v1Deps, err := clientset.AppsV1().Deployments(namespace).List(ctx, opts)
-	if err != nil {
-		return nil, err
-	}
+	return clientset.AppsV1().Deployments(namespace).List(ctx, opts)
 
-	return v1Deps.Items, nil
+}
+
+func GetDeploymentByName(ctx context.Context, namespace string, name string) (*appsv1.Deployment, error) {
+	opts := metav1.GetOptions{}
+	return clientset.AppsV1().Deployments(namespace).Get(ctx, name, opts)
 }
