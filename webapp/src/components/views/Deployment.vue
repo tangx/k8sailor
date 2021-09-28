@@ -30,7 +30,9 @@
     <tr v-for="(item,id) in data.items" key=:id>
       <th scope="row">{{ id }}</th>
       <td>{{ isActived(item.replicas,item.status.availableReplicas) }}</td>
-      <td>{{ item.name }}</td>
+      <td>
+        <a :href="depDetailLink(item.name)">{{ item.name }}</a>
+      </td>
       <td>{{ item.namespace }}</td>
       <td>{{ item.replicas }}</td>
       <td >{{ imagesJoin(item.images) }}</td>
@@ -41,18 +43,12 @@
       </td>
     </tr>
   </tbody>
-
-  <hr>
-
-      <div class="view-container">
-      <router-view />
-    </div>
 </table>
 
 </template>
 
 <script setup lang='ts'>
-import {reactive } from '@vue/reactivity'
+import {computed, reactive } from '@vue/reactivity'
 import { onMounted } from '@vue/runtime-core'
 import client,{ DeploymentItem } from '../../apis/deployment'
 
@@ -77,6 +73,11 @@ const imagesJoin=function(images:string[]):string{
 // isActived 判断 deployment 是否处于可用状态
 const isActived=function(replicas:number,availableReplicas:number):boolean{
   return replicas===availableReplicas
+}
+
+// deployment 详情页计算属性
+const depDetailLink = function(name:string):string{
+  return `/deployments/${name}`
 }
 
 onMounted(()=>{

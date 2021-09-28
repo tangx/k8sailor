@@ -7,15 +7,9 @@ const routes = [
         path: "/deployments",
         name: "Deployments",
         component: () => import('@/components/views/Deployment.vue'),
-       
     },
     {
-        path: "/detail",
-        name: "Detail",
-        component: () => import('@/components/views/DeploymentDetail.vue'),
-    },
-    {
-        path: "/deployment/:name",
+        path: "/deployments/:name",
         name: "DeploymentDetail",
         component: () => import('@/components/views/DeploymentDetail.vue')
     }
