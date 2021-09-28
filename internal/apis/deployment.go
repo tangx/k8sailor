@@ -34,7 +34,7 @@ func DeploymentRouterGroup(base *gin.RouterGroup) {
 				https://github.com/gin-gonic/gin/issues/2413#issuecomment-645768561
 			目前， gin 先执行 middleware, 后找路由并执行 handler。
 		*/
-		deployment.GET("/", func(c *gin.Context) {
+		dep.GET("/", func(c *gin.Context) {
 			// fmt.Println(c.Request.URL)  // /k8sailor/v0/deployments/?namespace=default
 			// fmt.Println(c.Request.URL.Path) // /k8sailor/v0/deployments/
 			// fmt.Println(c.Request.URL.RawQuery)  // namespace=default
