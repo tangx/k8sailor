@@ -22,9 +22,11 @@ export interface DeploymentItem {
 // namespace 默认值为 defualt
 // 使用 async await 解析内容
 async function getAllDeployments(namespace = "default"): Promise<Deployment>{
+    // const resp2 = await httpc.get(`/deployments?namespace=${namespace}`)
     const resp = await httpc.get(`/deployments?namespace=${namespace}`)
     // console.log(resp.data)
     return resp.data
+
 }
 
 
