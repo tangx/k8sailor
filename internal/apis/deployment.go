@@ -1,7 +1,6 @@
 package apis
 
 import (
-	"errors"
 	"net/http"
 	"strings"
 
@@ -12,8 +11,8 @@ import (
 )
 
 func DeploymentRouterGroup(base *gin.RouterGroup) {
-	// 创建 deployment 路由组
-	deployment := base.Group("/deployments")
+	// 创建 dep 路由组
+	dep := base.Group("/deployments")
 	{
 
 		/*
@@ -44,29 +43,64 @@ func DeploymentRouterGroup(base *gin.RouterGroup) {
 		})
 
 		// 针对 所有 deployment 操作
-		deployment.GET("", handlerGetAllDeployments)
+		dep.GET("", handlerListDeployments)
 
 		// 针对特定的命名资源操作
-		deployment.GET("/:name", func(c *gin.Context) {
-			err := errors.New("deployment not found")
-			httpresponse.Error(c, http.StatusNotFound, err)
-		})
+		dep.GET("/:name", hanlderGetDeploymentByName)
+
+		dep.GET("/:name/pods", handlerGetPodsByDeployment)
 	}
 }
 
-func handlerGetAllDeployments(c *gin.Context) {
-	params := &deployment.GetAllDeploymentsInput{}
+// handlerListDeployments 获取所有 deployments
+func handlerListDeployments(c *gin.Context) {
+	params := &deployment.ListDeploymentsInput{}
 	err := ginbinder.ShouldBindRequest(c, params)
 	if err != nil {
 		httpresponse.Error(c, http.StatusBadRequest, err)
 		return
 	}
 
-	deps, err := deployment.GetAllDeployments(*params)
+	deps, err := deployment.ListDeployments(c, *params)
 	if err != nil {
 		httpresponse.Error(c, http.StatusInternalServerError, err)
 		return
 	}
 
 	httpresponse.OK(c, deps)
+}
+
+// hanlderGetDeploymentByName 根据 name 获取 deployment
+func hanlderGetDeploymentByName(c *gin.Context) {
+	input := deployment.GetDeploymentByNameInput{}
+	err := ginbinder.ShouldBindRequest(c, &input)
+	if err != nil {
+		httpresponse.Error(c, http.StatusBadRequest, err)
+		return
+	}
+	dep, err := deployment.GetDeploymentByName(c, input)
+	if err != nil {
+		httpresponse.Error(c, http.StatusInternalServerError, err)
+		return
+	}
+	httpresponse.OK(c, dep)
+}
+
+// handlerGetPodsByDeployment 根据 deployment 获取 pods
+func handlerGetPodsByDeployment(c *gin.Context) {
+	// get deployment
+	input := deployment.GetPodsByDeploymentInput{}
+	err := ginbinder.ShouldBindRequest(c, &input)
+	if err != nil {
+		httpresponse.Error(c, http.StatusBadRequest, err)
+		return
+	}
+
+	pods, err := deployment.GetPodsByDeployment(c, input)
+	if err != nil {
+		httpresponse.Error(c, http.StatusInternalServerError, err)
+		return
+	}
+
+	httpresponse.OK(c, pods)
 }

@@ -1,3 +1,13 @@
 
 ### GET all deployments
 GET http://127.0.0.1:8088/k8sailor/v0/deployments?namespace=default
+
+
+### GET Deployments Details
+GET http://127.0.0.1:8088/k8sailor/v0/deployments/my-nginx-2?namespace=default
+Content-Type: application/json
+
+
+### GET Deployments Details Failed
+GET http://127.0.0.1:8088/k8sailor/v0/deployments/failed-nginx/pods?namespace=default
+Content-Type: application/json

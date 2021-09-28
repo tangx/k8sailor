@@ -2,7 +2,6 @@ package confgin
 
 import (
 	"fmt"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -50,7 +49,7 @@ func (s *Server) RegisterRoute(registerFunc func(rg *gin.RouterGroup)) {
 	base := s.engine.Group(s.Appname)
 
 	// 针对 appname 下的路由，允许跨域
-	base.Use(cors())
+	base.Use(MiddleCors())
 
 	// 注册业务子路由
 	registerFunc(base)
