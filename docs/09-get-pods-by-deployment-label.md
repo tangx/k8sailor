@@ -80,6 +80,8 @@ kubectl get pod -l app=my-nginx-1
 
 ### 获取 ReplicaSet 再获取 Pod
 
+[/internal/k8sdao/replicaset.go](/internal/k8sdao/replicaset.go)
+
 因此， 在获取获取 Pod 信息之前， 应该先获取 `ReplicaSet`， 再获取 `Pod`
 
 通过 deployment 的 label 获取 ReplicaSet
