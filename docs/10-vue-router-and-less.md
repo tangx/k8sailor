@@ -1,5 +1,7 @@
 # 使用 vue-router 进行路由管理
 
+> tag: https://github.com/tangx/k8sailor/tree/feat/10-vue-router-and-less
+
 ![index](/docs/assets/img/10/index.png)
 
 ## 使用 vue-router 路由管理
