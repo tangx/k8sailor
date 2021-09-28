@@ -9,14 +9,14 @@ import (
 )
 
 type Pod struct {
-	Name       string    `json:"name"`
-	Namespace  string    `json:"namespace"`
-	Images     []string  `json:"images"`
-	NodeName   string    `json:"nodeName"`
-	CreateTime time.Time `json:"createTime"`
-	PodIP      string    `json:"podIp"`
-	Status     PodStatus `json:"status"`
-	// Status2    corev1.PodStatus
+	Name       string            `json:"name"`
+	Namespace  string            `json:"namespace"`
+	Images     []string          `json:"images"`
+	NodeName   string            `json:"nodeName"`
+	CreateTime time.Time         `json:"createTime"`
+	PodIP      string            `json:"podIp"`
+	Status     PodStatus         `json:"status"`
+	Labels     map[string]string `json:"labels"`
 }
 
 type PodStatus struct {
@@ -60,6 +60,6 @@ func extractPod(item corev1.Pod) *Pod {
 			Message: item.Status.Message,
 			Reason:  item.Status.Reason,
 		},
-		// Status2: v1pod.Status,
+		Labels: item.Labels,
 	}
 }

@@ -6,7 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/tangx/ginbinder"
 	"github.com/tangx/k8sailor/internal/biz/deployment"
-	"github.com/tangx/k8sailor/internal/biz/pod"
 	"github.com/tangx/k8sailor/pkg/confgin/httpresponse"
 )
 
@@ -61,26 +60,17 @@ func hanlderGetDeploymentByName(c *gin.Context) {
 // handlerGetPodsByDeployment 根据 deployment 获取 pods
 func handlerGetPodsByDeployment(c *gin.Context) {
 	// get deployment
-	input := deployment.GetDeploymentByNameInput{}
+	input := deployment.GetPodsByDeploymentInput{}
 	err := ginbinder.ShouldBindRequest(c, &input)
 	if err != nil {
 		httpresponse.Error(c, http.StatusBadRequest, err)
 		return
 	}
-	dep, err := deployment.GetDeploymentByName(c, input)
+
+	pods, err := deployment.GetPodsByDeployment(c, input)
 	if err != nil {
 		httpresponse.Error(c, http.StatusInternalServerError, err)
 		return
-	}
-
-	// get pods
-	pInput := pod.GetPodsByLabelsInput{
-		Namespace: dep.Namespace,
-		Labels:    dep.LabelSelector.MatchLabels,
-	}
-	pods, err := pod.GetPodsByLabels(c, pInput)
-	if err != nil {
-		httpresponse.Error(c, http.StatusInternalServerError, err)
 	}
 
 	httpresponse.OK(c, pods)
