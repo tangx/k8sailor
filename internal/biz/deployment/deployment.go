@@ -21,7 +21,7 @@ type Deployment struct {
 
 	Status DeploymentStatus `json:"status"`
 
-	LabelSelector *metav1.LabelSelector
+	LabelSelector *metav1.LabelSelector `json:"labelSelector"`
 }
 
 type DeploymentStatus struct {

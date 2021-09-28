@@ -9,5 +9,5 @@ Content-Type: application/json
 
 
 ### GET Deployments Details Failed
-GET http://127.0.0.1:8088/k8sailor/v0/deployments/failed-nginx?namespace=default
+GET http://127.0.0.1:8088/k8sailor/v0/deployments/failed-nginx/pods?namespace=default
 Content-Type: application/json

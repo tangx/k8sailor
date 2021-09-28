@@ -39,22 +39,27 @@ func GetPodsByLabels(ctx context.Context, input GetPodsByLabelsInput) ([]*Pod, e
 
 	pods := make([]*Pod, len(v1Pods.Items))
 
-	for i, v1pod := range v1Pods.Items {
-		pods[i] = &Pod{
-			Name:       v1pod.Name,
-			Namespace:  v1pod.Namespace,
-			Images:     PodImages(v1pod.Spec),
-			NodeName:   v1pod.Spec.NodeName,
-			CreateTime: v1pod.CreationTimestamp.Time,
-			PodIP:      v1pod.Status.PodIP,
-			Status: PodStatus{
-				Phase:   v1pod.Status.Phase,
-				Message: v1pod.Status.Message,
-				Reason:  v1pod.Status.Reason,
-			},
-			// Status2: v1pod.Status,
-		}
+	for i, item := range v1Pods.Items {
+		pods[i] = extractPod(item)
 	}
 
 	return pods, nil
+}
+
+// extractPod 转换成业务本身的 Pod
+func extractPod(item corev1.Pod) *Pod {
+	return &Pod{
+		Name:       item.Name,
+		Namespace:  item.Namespace,
+		Images:     PodImages(item.Spec),
+		NodeName:   item.Spec.NodeName,
+		CreateTime: item.CreationTimestamp.Time,
+		PodIP:      item.Status.PodIP,
+		Status: PodStatus{
+			Phase:   item.Status.Phase,
+			Message: item.Status.Message,
+			Reason:  item.Status.Reason,
+		},
+		// Status2: v1pod.Status,
+	}
 }

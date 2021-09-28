@@ -15,15 +15,17 @@ func DeploymentRouterGroup(base *gin.RouterGroup) {
 	dep := base.Group("/deployments")
 	{
 		// 针对 所有 deployment 操作
-		dep.GET("", handlerGetAllDeployments)
+		dep.GET("", handlerListDeployments)
 
 		// 针对特定的命名资源操作
-		dep.GET("/:name", handlerGetPodsByDeployment)
+		dep.GET("/:name", hanlderGetDeploymentByName)
+
+		dep.GET("/:name/pods", handlerGetPodsByDeployment)
 	}
 }
 
-// handlerGetAllDeployments 获取所有 deployments
-func handlerGetAllDeployments(c *gin.Context) {
+// handlerListDeployments 获取所有 deployments
+func handlerListDeployments(c *gin.Context) {
 	params := &deployment.ListDeploymentsInput{}
 	err := ginbinder.ShouldBindRequest(c, params)
 	if err != nil {
@@ -40,7 +42,25 @@ func handlerGetAllDeployments(c *gin.Context) {
 	httpresponse.OK(c, deps)
 }
 
+// hanlderGetDeploymentByName 根据 name 获取 deployment
+func hanlderGetDeploymentByName(c *gin.Context) {
+	input := deployment.GetDeploymentByNameInput{}
+	err := ginbinder.ShouldBindRequest(c, &input)
+	if err != nil {
+		httpresponse.Error(c, http.StatusBadRequest, err)
+		return
+	}
+	dep, err := deployment.GetDeploymentByName(c, input)
+	if err != nil {
+		httpresponse.Error(c, http.StatusInternalServerError, err)
+		return
+	}
+	httpresponse.OK(c, dep)
+}
+
+// handlerGetPodsByDeployment 根据 deployment 获取 pods
 func handlerGetPodsByDeployment(c *gin.Context) {
+	// get deployment
 	input := deployment.GetDeploymentByNameInput{}
 	err := ginbinder.ShouldBindRequest(c, &input)
 	if err != nil {
@@ -53,6 +73,7 @@ func handlerGetPodsByDeployment(c *gin.Context) {
 		return
 	}
 
+	// get pods
 	pInput := pod.GetPodsByLabelsInput{
 		Namespace: dep.Namespace,
 		Labels:    dep.LabelSelector.MatchLabels,
