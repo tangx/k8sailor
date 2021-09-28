@@ -22,7 +22,7 @@ golang 练习的前后端
 2. [vue3 - 初始化 vue3 + vite2](/docs/07-initial-vue3-vite2.md)
 3. [vue3 - 获取并展示 deployments 信息](/docs/08-fetch-and-display-deployments.md)
 4. [通过 deployment label 获取 pod 信息](/docs/09-get-pods-by-deployment-label.md)
-5. [vue3 - 使用 vue-router](/docs/10-vue-router-and-less.md)
+5. [vue3 - 使用 vue-router 和 less 优化展示页面](/docs/10-vue-router-and-less.md)
 ## feed
 
 ![wx-qrcode](https://tangx.in/assets/images/wx-qrcode.png)
