@@ -1,10 +1,10 @@
 
 <template>
-  <Deployment/>
+  <Index />
 </template>
 
 <script setup lang="ts">
-import Deployment from './components/Deployment.vue'
+import Index from './components/Index.vue'
 </script>
 
 <style>
