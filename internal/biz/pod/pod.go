@@ -1,6 +1,7 @@
 package pod
 
 import (
+	"context"
 	"time"
 
 	"github.com/tangx/k8sailor/internal/k8sdao"
@@ -29,9 +30,9 @@ type GetPodsByLabelsInput struct {
 	Labels    map[string]string `body:"" mime:"json"`
 }
 
-func GetPodsByLabels(input GetPodsByLabelsInput) ([]*Pod, error) {
+func GetPodsByLabels(ctx context.Context, input GetPodsByLabelsInput) ([]*Pod, error) {
 
-	v1Pods, err := k8sdao.GetPodByLabels(input.Namespace, input.Labels)
+	v1Pods, err := k8sdao.GetPodByLabels(ctx, input.Namespace, input.Labels)
 	if err != nil {
 		return nil, err
 	}

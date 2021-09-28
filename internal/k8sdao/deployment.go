@@ -7,8 +7,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func ListDeployments(namespace string) (*appsv1.DeploymentList, error) {
-	ctx := context.TODO()
+func ListDeployments(ctx context.Context, namespace string) (*appsv1.DeploymentList, error) {
 	opts := metav1.ListOptions{}
 	return clientset.AppsV1().Deployments(namespace).List(ctx, opts)
 

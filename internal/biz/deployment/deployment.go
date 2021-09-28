@@ -38,9 +38,9 @@ type ListDeploymentsInput struct {
 }
 
 // ListDeployments 获取 namespace 下的所有 deployments
-func ListDeployments(input ListDeploymentsInput) ([]*Deployment, error) {
+func ListDeployments(ctx context.Context, input ListDeploymentsInput) ([]*Deployment, error) {
 
-	v1Deps, err := k8sdao.ListDeployments(input.Namespace)
+	v1Deps, err := k8sdao.ListDeployments(ctx, input.Namespace)
 	if err != nil {
 		return nil, err
 	}

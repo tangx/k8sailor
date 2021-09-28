@@ -31,7 +31,7 @@ func handlerGetAllDeployments(c *gin.Context) {
 		return
 	}
 
-	deps, err := deployment.ListDeployments(*params)
+	deps, err := deployment.ListDeployments(c, *params)
 	if err != nil {
 		httpresponse.Error(c, http.StatusInternalServerError, err)
 		return
@@ -57,7 +57,7 @@ func handlerGetPodsByDeployment(c *gin.Context) {
 		Namespace: dep.Namespace,
 		Labels:    dep.LabelSelector.MatchLabels,
 	}
-	pods, err := pod.GetPodsByLabels(pInput)
+	pods, err := pod.GetPodsByLabels(c, pInput)
 	if err != nil {
 		httpresponse.Error(c, http.StatusInternalServerError, err)
 	}

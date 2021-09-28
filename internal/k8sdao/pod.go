@@ -9,8 +9,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func GetPodByLabels(namespace string, labels map[string]string) (*corev1.PodList, error) {
-	ctx := context.TODO()
+func GetPodByLabels(ctx context.Context, namespace string, labels map[string]string) (*corev1.PodList, error) {
 
 	opts := metav1.ListOptions{
 		LabelSelector: convertMapToSelector(labels),
