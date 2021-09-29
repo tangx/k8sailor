@@ -116,6 +116,33 @@ func GetPodsByDeployment(ctx context.Context, input GetPodsByDeploymentInput) ([
 	return allPods, nil
 }
 
+// SetDeploymentReplicasInput 调整 deployment pod 数量参数
+// Replicas 为了避免 **0值** 影响。
+//   1. 使用为 *int 指针对象， 自行在业务逻辑中进行校验
+//   2. 另外也可以使用， `binding` tag， 由 gin 框架的 valicator 帮忙校验。 https://github.com/go-playground/validator
+// Namespace 设置了默认值， 如果请求不提供将由 gin 框架自己填充。
+type SetDeploymentReplicasInput struct {
+	Namespace string `query:"namespace,default=default"`
+	Name      string `uri:"name"`
+	Replicas  *int   `query:"replicas" binding:"required"`
+}
+
+// SetDeploymentReplicas 设置 deployment 的 pod 副本数量
+func SetDeploymentReplicas(ctx context.Context, input SetDeploymentReplicasInput) (bool, error) {
+
+	// 参数验证
+	if input.Replicas == nil {
+		err := fmt.Errorf("replicas must be provide")
+		return false, err
+	}
+
+	err := k8sdao.SetDeploymentReplicas(ctx, input.Namespace, input.Name, *input.Replicas)
+
+	// err==nil -> true 表示设置成功
+	// 这里选择不在 api 层进行判断是为了保持各层的业务分工一致性。
+	return err == nil, err
+}
+
 // extractDeployment 转换成业务本身的 Deployment
 func extractDeployment(item appsv1.Deployment) *Deployment {
 	return &Deployment{

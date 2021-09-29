@@ -1,4 +1,5 @@
 import httpc, { HttpcResponse } from './httpc'
+import qs from 'qs'
 
 // Deployment 是 Deployment 的数据结构
 export interface Deployment {
@@ -13,8 +14,6 @@ export interface Deployment {
     }
 }
 
-
-
 // DeploymentListResponse 继承并覆盖 data， 返回 deployment 的列表
 export interface DeploymentListResponse extends HttpcResponse {
     data: Deployment[]
@@ -23,7 +22,6 @@ export interface DeploymentListResponse extends HttpcResponse {
 // namespace 默认值为 defualt
 // 使用 async await 解析内容
 async function getAllDeployments(namespace = "default"): Promise<DeploymentListResponse> {
-    // const resp2 = await httpc.get(`/deployments?namespace=${namespace}`)
     const resp = await httpc.get(`/deployments?namespace=${namespace}`)
     // console.log(resp.data)
     return resp.data
@@ -53,9 +51,30 @@ async function getDeploymentPodsByName(namespace: string, name: string): Promise
 }
 
 
+
+interface SetDeploymentReplicasResponse extends HttpcResponse {
+    data: Pod[]
+}
+// setDeploymentReplicas 设置 deployment 副本数量
+async function setDeploymentReplicas(namespace: string, name: string, replicas: number): Promise<SetDeploymentReplicasResponse> {
+    const params = qs.stringify({
+        namespace: namespace,
+        replicas: replicas,
+    })
+
+    const u = `/deployments/${name}/replicas?${params}`
+    // /deployments/failed-nginx/replicas?namespace=default&replicas=3
+
+    const resp = await httpc.put(u)
+
+    return resp.data
+}
+
+
 // 导出所有方法
 export default {
     getAllDeployments,
     getDeploymentByName,
     getDeploymentPodsByName,
+    setDeploymentReplicas,
 }

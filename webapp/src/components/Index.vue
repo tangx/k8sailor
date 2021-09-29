@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="header">
-      <h3>k8sailor - 下一个 k8s 管理平台</h3>
+      <h3>k8sailor - 下一代 k8s 管理平台</h3>
       <h5 class="grey">虽然代码臭，但是口号响啊</h5>
     </div>
     <hr />

@@ -24,7 +24,7 @@ golang 练习的前后端
 4. [通过 deployment label 获取 pod 信息](/docs/09-get-pods-by-deployment-label.md)
 5. [vue3 - 使用 vue-router 和 less 优化展示页面](/docs/10-vue-router-and-less.md)
 6. [vue3 - 展示 deployment 详情页](/docs/11-display-deployment-detail.md)
-
+7. [deployment 副本数量设置 与 参数的有效性验证](/docs/12-deployment-scale-and-params-validate.md)
 
 ## feed
 
