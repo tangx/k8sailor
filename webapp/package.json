@@ -8,9 +8,10 @@
   },
   "dependencies": {
     "@types/node": "^16.10.1",
+    "@types/qs": "^6.9.7",
     "axios": "^0.21.4",
     "less": "^4.1.1",
-    "querystring": "^0.2.1",
+    "qs": "^6.10.1",
     "vue": "^3.2.13",
     "vue-router": "^4.0.11"
   },

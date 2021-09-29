@@ -1,5 +1,5 @@
 import httpc, { HttpcResponse } from './httpc'
-import querystring from 'querystring'
+import qs from 'qs'
 
 // Deployment 是 Deployment 的数据结构
 export interface Deployment {
@@ -13,8 +13,6 @@ export interface Deployment {
         unavailableReplicas: number
     }
 }
-
-
 
 // DeploymentListResponse 继承并覆盖 data， 返回 deployment 的列表
 export interface DeploymentListResponse extends HttpcResponse {
@@ -53,13 +51,23 @@ async function getDeploymentPodsByName(namespace: string, name: string): Promise
 }
 
 
+
+interface SetDeploymentReplicasResponse extends HttpcResponse {
+    data: Pod[]
+}
 // setDeploymentReplicas 设置 deployment 副本数量
-async function setDeploymentReplicas(namespace: string, name: string, replicas: number) {
-    const resp = await httpc.put(`/deployments/${name}/replicas?namespace=${namespace}&replicas=${replicas}`)
+async function setDeploymentReplicas(namespace: string, name: string, replicas: number): Promise<SetDeploymentReplicasResponse> {
+    const params = qs.stringify({
+        namespace: namespace,
+        replicas: replicas,
+    })
 
+    const u = `/deployments/${name}/replicas?${params}`
+    // /deployments/failed-nginx/replicas?namespace=default&replicas=3
 
-    console.log("setDeploymentReplicas::::", resp.data);
+    const resp = await httpc.put(u)
 
+    return resp.data
 }
 
 
