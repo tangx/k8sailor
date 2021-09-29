@@ -50,7 +50,7 @@ axios 怎么传递 query 参数， 而不是手动写 ?
 
 ```bash
 yarn add @types/qs qs
-`
+```
 
 使用 `qs.stringify(params)` 进行序列化。
 
