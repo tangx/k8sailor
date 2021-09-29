@@ -3,6 +3,9 @@
   <div class="deployment-container">
     namespace: {{ data.Item.namespace }} &nbsp;
     deployment: {{ data.Item.name }} &nbsp;
+    <br>
+    replicas: <input type="text" v-model="data.Item.replicas">
+    <button @click="setDeploymentReplicas(data.Item)">设置</button>
   </div>
 
   <div class="pod-container">
@@ -14,7 +17,6 @@
       <th scope="col">Node</th>
       <th scope="col">Ipaddr</th>
       <th scope="col">CreateTime</th>
-
     </tr>
   </thead>
   <tbody>
@@ -68,6 +70,13 @@ const getDeploymentPods=async function(){
 
   let resp=await client.getDeploymentPodsByName(p.namespace,p.name)
   data.Pods=resp.data
+}
+
+const setDeploymentReplicas=function(item:Deployment){
+  // console.log("item:::",item);
+  client.setDeploymentReplicas(item.namespace,item.name,item.replicas)
+
+  fetchData()
 }
 
 // 获取 url 中的变量信息

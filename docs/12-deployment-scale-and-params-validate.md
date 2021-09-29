@@ -34,4 +34,9 @@ type SetDeploymentReplicasInput struct {
 }
 ```
 
-## vue 
+## gin cors
+
+需要在 **根** 上使用。 在子路由上允许， put 的时候也会出现 404。
+
+## vue
+

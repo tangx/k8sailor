@@ -1,4 +1,5 @@
 import httpc, { HttpcResponse } from './httpc'
+import querystring from 'querystring'
 
 // Deployment 是 Deployment 的数据结构
 export interface Deployment {
@@ -23,7 +24,6 @@ export interface DeploymentListResponse extends HttpcResponse {
 // namespace 默认值为 defualt
 // 使用 async await 解析内容
 async function getAllDeployments(namespace = "default"): Promise<DeploymentListResponse> {
-    // const resp2 = await httpc.get(`/deployments?namespace=${namespace}`)
     const resp = await httpc.get(`/deployments?namespace=${namespace}`)
     // console.log(resp.data)
     return resp.data
@@ -53,9 +53,20 @@ async function getDeploymentPodsByName(namespace: string, name: string): Promise
 }
 
 
+// setDeploymentReplicas 设置 deployment 副本数量
+async function setDeploymentReplicas(namespace: string, name: string, replicas: number) {
+    const resp = await httpc.put(`/deployments/${name}/replicas?namespace=${namespace}&replicas=${replicas}`)
+
+
+    console.log("setDeploymentReplicas::::", resp.data);
+
+}
+
+
 // 导出所有方法
 export default {
     getAllDeployments,
     getDeploymentByName,
     getDeploymentPodsByName,
+    setDeploymentReplicas,
 }
