@@ -47,8 +47,8 @@ func DeploymentRouterGroup(base *gin.RouterGroup) {
 
 		// 针对特定的命名资源操作
 		dep.GET("/:name", hanlderGetDeploymentByName)
-
 		dep.GET("/:name/pods", handlerGetPodsByDeployment)
+		dep.PUT("/:name/replicas", handlerSetDeploymentReplicas)
 	}
 }
 
@@ -103,4 +103,22 @@ func handlerGetPodsByDeployment(c *gin.Context) {
 	}
 
 	httpresponse.OK(c, pods)
+}
+
+// handlerSetDeploymentReplicas 设置 deployment pod 数量
+func handlerSetDeploymentReplicas(c *gin.Context) {
+	input := deployment.SetDeploymentReplicasInput{}
+	err := ginbinder.ShouldBindRequest(c, &input)
+	if err != nil {
+		httpresponse.Error(c, http.StatusBadRequest, err)
+		return
+	}
+
+	ok, err := deployment.SetDeploymentReplicas(c, input)
+	if err != nil {
+		httpresponse.Error(c, http.StatusInternalServerError, err)
+		return
+	}
+
+	httpresponse.OK(c, ok)
 }
