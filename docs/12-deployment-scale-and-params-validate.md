@@ -1,5 +1,7 @@
 # deployment 副本数量设置 与 参数的有效性验证
 
+> tag: https://github.com/tangx/k8sailor/tree/feat/12-deployment-scale-and-params-validate
+
 ## deployment scale
 
 ```bash
