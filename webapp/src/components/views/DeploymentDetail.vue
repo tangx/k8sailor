@@ -6,7 +6,27 @@
   </div>
 
   <div class="pod-container">
-    <h5>pod info</h5>
+    <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Pod Name</th>
+      <th scope="col">Status</th>
+      <th scope="col">Node</th>
+      <th scope="col">Ipaddr</th>
+      <th scope="col">CreateTime</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    <tr v-for="(pod,idx) of data.Pods" :key="pod.name">
+      <td>{{ pod.name }}</td>
+      <td>{{ pod.status.phase }}</td>
+      <td>{{ pod.nodeName }}</td>
+      <td>{{ pod.podIp }}</td>
+      <td>{{ pod.createTime }}</td>
+    </tr>
+  </tbody>
+</table>
   </div>
 </template>
 
@@ -18,7 +38,7 @@ import client, { Deployment } from "../../apis/deployment";
 let data = reactive({
   Item: {} as Deployment,
   Error: "",
-
+  Pods: [] as Pod[],
 })
 
 let req = reactive({
@@ -32,7 +52,7 @@ const router = useRouter()
 
 const fetchData = function () {
   getDeployment()
-  // getPod()
+  getDeploymentPods()
 }
 
 
@@ -41,9 +61,13 @@ const getDeployment = async function () {
   let resp = await client.getDeploymentByName(p.namespace, p.name)
   data.Item = resp.data
   data.Error = resp.error
+}
 
-  console.log(resp);
+const getDeploymentPods=async function(){
+  const p = req.Params
 
+  let resp=await client.getDeploymentPodsByName(p.namespace,p.name)
+  data.Pods=resp.data
 }
 
 // 获取 url 中的变量信息
@@ -71,4 +95,10 @@ onMounted(() => {
 </script>
 
 <style lang='less' scoped>
+.deployment-container{
+  font-size: 20px;
+  font-weight: 5000;
+  // font: bold;
+  color: #0F65FD;
+}
 </style>

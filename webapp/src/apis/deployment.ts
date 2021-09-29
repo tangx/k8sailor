@@ -37,15 +37,19 @@ export interface DeploymentResponse extends HttpcResponse {
 
 async function getDeploymentByName(namespace: string, name: string): Promise<DeploymentResponse> {
     const resp = await httpc.get(`/deployments/${name}?namespace=${namespace}`)
-    console.log("deployment by name ::::", resp.data);
+    // console.log("deployment by name ::::", resp.data);
     return resp.data
 }
 
-
-async function getDeploymentPodsByName(namespace: string, name: string) {
+// 获取与 deployment 相关的所有 pod
+interface DeploymentPodsResponse extends HttpcResponse {
+    data: Pod[]
+}
+async function getDeploymentPodsByName(namespace: string, name: string): Promise<DeploymentPodsResponse> {
     const resp = await httpc.get(`/deployments/${name}/pods?namespace=${namespace}`)
 
-    console.log("deployment pod::::", resp.data);
+    // console.log("deployment pod::::", resp.data);
+    return resp.data
 }
 
 
