@@ -2,7 +2,7 @@
 
 > tag: https://github.com/tangx/k8sailor/tree/feat/10-vue-router-and-less
 
-![index](/docs/assets/img/10/index.png)
+![index](./assets/img/10/index.png)
 
 ## 使用 vue-router 路由管理
 
@@ -48,6 +48,6 @@ less https://lesscss.org/ 是 css 的超级。 不仅语法与 css 相同。 而
 
 ```
 
-> flex: https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox
+> flex: https://developer.mozilla.org/zh-CN./Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox
 
 

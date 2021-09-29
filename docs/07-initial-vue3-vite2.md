@@ -58,7 +58,7 @@ import Deployment from './components/Deployment.vue'
 yarn dev
 ```
 
-![vue3-clean.png](/docs/assets/img/07/vue3-clean.png)
+![vue3-clean.png](./assets/img/07/vue3-clean.png)
 
 朴实无华的界面。
 

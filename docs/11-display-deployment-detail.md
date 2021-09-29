@@ -2,7 +2,7 @@
 
 > tag: https://github.com/tangx/k8sailor/tree/feat/11-display-deployment-detail
 
-![deployment-detail.png](/docs/assets/img/11/deployment-detail.png)
+![deployment-detail.png](./assets/img/11/deployment-detail.png)
 
 之前在后端已经将详情页的展示接口拆成了 **2个** 
 

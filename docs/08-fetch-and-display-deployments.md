@@ -3,9 +3,9 @@
 > tag: https://github.com/tangx/k8sailor/tree/feat/08-fetch-and-display-deployments
 
 
-![display-deployments.png](/docs/assets/img/08/display-deployments.png)
+![display-deployments.png](./assets/img/08/display-deployments.png)
 
-![display-deployments-kube-system.png](/docs/assets/img/08/display-deployments-kube-system.png)
+![display-deployments-kube-system.png](./assets/img/08/display-deployments-kube-system.png)
 
 ## 使用 Axios 请求 Deployments 数据
 
