@@ -31,7 +31,7 @@ func SetDeploymentReplicas(ctx context.Context, namespace string, name string, r
 	}
 
 	if replicas < 0 || replicas > 10 {
-		return errors.New("invalid replicas number")
+		return errors.New("invalid replicas number, must 0 < replica < 10")
 	}
 	// set new replicas
 	v1Scale.Spec.Replicas = int32(replicas)
