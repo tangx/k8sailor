@@ -36,7 +36,11 @@ type SetDeploymentReplicasInput struct {
 
 ## gin cors
 
-需要在 **根** 上使用。 在子路由上允许， put 的时候也会出现 404。
+需要在 **根** 上使用 cors 跨域设置。
 
-## vue
+如果在子路由上允许， put 的时候也会出现 404。
+
+## vue axios
+
++ [ ] axios 怎么传递 query 参数， 而不是手动写。
 
