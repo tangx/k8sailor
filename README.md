@@ -25,6 +25,7 @@ golang 练习的前后端
 5. [vue3 - 使用 vue-router 和 less 优化展示页面](/docs/10-vue-router-and-less.md)
 6. [vue3 - 展示 deployment 详情页](/docs/11-display-deployment-detail.md)
 7. [deployment 副本数量设置 与 参数的有效性验证](/docs/12-deployment-scale-and-params-validate.md)
+8. [使用 informer 监听变化并在本地缓存数据](./docs/13-list-watch-mode-and-informer.md)
 
 ## feed
 

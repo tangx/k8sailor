@@ -9,10 +9,15 @@ import (
 )
 
 // ListDeployments 返回 namespace 下的所有 deployments
-func ListDeployments(ctx context.Context, namespace string) (*appsv1.DeploymentList, error) {
+// 兼容其他数据来源， 比如使用 informer 保存在本地的 cache， 不返回 DeploymentList 对象 而返回 []Deployment
+func ListDeployments(ctx context.Context, namespace string) ([]appsv1.Deployment, error) {
 	opts := metav1.ListOptions{}
-	return clientset.AppsV1().Deployments(namespace).List(ctx, opts)
+	v1DepList, err := clientset.AppsV1().Deployments(namespace).List(ctx, opts)
+	if err != nil {
+		return nil, err
+	}
 
+	return v1DepList.Items, nil
 }
 
 // GetDeploymentByName 根据 name 获取 deployment
