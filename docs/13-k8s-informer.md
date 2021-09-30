@@ -1,6 +1,6 @@
 # k8s informer
 
-> 深入理解 k8s informer: https://cloudnative.to/blog/client-go-informer-source-code/
+> tag: https://github.com/tangx/k8sailor/tree/feat/13-k8s-informer
 
 ![informer-design.jpeg](`./assets/img/13/informer-design.jpeg)
 
@@ -145,3 +145,8 @@ func runInformer() {
 1. 从逻辑上来说 `k8scache` 和 `k8s` 是一层的， 都是数据的提供者。
 2. `DAO` 的含义是 **数据访问对象 `data access object`**， 其职责就是对 **来自不同数据源的相同数据** 执行 **适合自身业务逻辑的抽象和封装**
 
+
+
+## 扩展阅读
+
+> 深入理解 k8s informer: https://cloudnative.to/blog/client-go-informer-source-code/
