@@ -10,5 +10,5 @@ var (
 )
 
 func RegisterHandlers(informer *confk8s.Informer) {
-	informer.WithEventHandler(DepTank)
+	informer.WithEventHandlers(DepTank)
 }

@@ -36,8 +36,8 @@ func (inf *Informer) initial() {
 	inf.factory = informers.NewSharedInformerFactory(inf.clientset, inf.DefaultResync)
 }
 
-// WithEventHandler 注册 handler
-func (inf *Informer) WithEventHandler(handlers ...InformerEventHandler) *Informer {
+// WithEventHandlers 注册 handler
+func (inf *Informer) WithEventHandlers(handlers ...InformerEventHandler) *Informer {
 	for _, handler := range handlers {
 		kind := handler.InformerKind()
 		switch kind {
