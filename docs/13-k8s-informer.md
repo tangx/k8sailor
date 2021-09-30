@@ -2,7 +2,7 @@
 
 > tag: https://github.com/tangx/k8sailor/tree/feat/13-k8s-informer
 
-![informer-design.jpeg](`./assets/img/13/informer-design.jpeg)
+![informer-design.jpeg](./assets/img/13/informer-design.jpeg)
 
 从应用层面来说， 创建 informer 并启动之后就与 k8s cluster 创建了一个长链接并订阅了 **某个资源 Resource** 的变化。
 
