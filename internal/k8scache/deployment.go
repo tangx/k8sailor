@@ -1,11 +1,14 @@
 package k8scache
 
 import (
+	"context"
 	"sync"
 
 	"github.com/sirupsen/logrus"
 	appsv1 "k8s.io/api/apps/v1"
 )
+
+type DeploymentMapper = map[string]*appsv1.Deployment
 
 // DeploymentCache 为本地 deployment cache
 //   Tank 水箱， 为 Deployment 的容器
@@ -20,16 +23,16 @@ func (d *DeploymentCache) InformerKind() string {
 	return "deployment"
 }
 func (d *DeploymentCache) OnAdd(obj interface{}) {
-	set, dep, ok := d.extract(obj)
+	mapper, dep, ok := d.extract(obj)
 	if !ok {
 		return
 	}
 
-	d.onAdd(set, dep)
+	d.onAdd(mapper, dep)
 }
 
 func (d *DeploymentCache) OnUpdate(old, new interface{}) {
-	set, _, ok := d.extract(old)
+	mapper, _, ok := d.extract(old)
 	if !ok {
 		return
 	}
@@ -38,52 +41,52 @@ func (d *DeploymentCache) OnUpdate(old, new interface{}) {
 		return
 	}
 
-	d.onUpdate(set, dep)
+	d.onUpdate(mapper, dep)
 }
 
 func (d *DeploymentCache) OnDelete(obj interface{}) {
-	set, dep, ok := d.extract(obj)
+	mapper, dep, ok := d.extract(obj)
 	if !ok {
 		return
 	}
 
-	d.onDelete(set, dep)
+	d.onDelete(mapper, dep)
 }
 
 // onAdd 添加对象
-func (d *DeploymentCache) onAdd(set map[string]*appsv1.Deployment, dep *appsv1.Deployment) {
+func (d *DeploymentCache) onAdd(depMap DeploymentMapper, dep *appsv1.Deployment) {
 
 	d.rwmu.Lock()
 	defer d.rwmu.Unlock()
 
-	set[dep.Name] = dep
+	depMap[dep.Name] = dep
 	logrus.Debugf("add deployment %s of %s", dep.Name, dep.Namespace)
 }
 
-func (d *DeploymentCache) onDelete(set map[string]*appsv1.Deployment, dep *appsv1.Deployment) {
+func (d *DeploymentCache) onDelete(mapper DeploymentMapper, dep *appsv1.Deployment) {
 
 	d.rwmu.Lock()
 	defer d.rwmu.Unlock()
 
-	delete(set, dep.Name)
+	delete(mapper, dep.Name)
 	logrus.Debugf("delete deployment %s of %s", dep.Name, dep.Namespace)
 }
 
-func (d *DeploymentCache) onUpdate(set map[string]*appsv1.Deployment, dep *appsv1.Deployment) {
+func (d *DeploymentCache) onUpdate(mapper DeploymentMapper, dep *appsv1.Deployment) {
 
 	d.rwmu.Lock()
 	defer d.rwmu.Unlock()
 
-	set[dep.Name] = dep
+	mapper[dep.Name] = dep
 	logrus.Debugf("update deployment %s of %s", dep.Name, dep.Namespace)
 }
 
-func newDeploymentSet() map[string]*appsv1.Deployment {
-	return make(map[string]*appsv1.Deployment)
+func newDeploymentMap() DeploymentMapper {
+	return make(DeploymentMapper)
 }
 
 // extract 提取信息
-func (d *DeploymentCache) extract(obj interface{}) (set map[string]*appsv1.Deployment, dep *appsv1.Deployment, ok bool) {
+func (d *DeploymentCache) extract(obj interface{}) (mapper DeploymentMapper, dep *appsv1.Deployment, ok bool) {
 
 	dep, ok = obj.(*appsv1.Deployment)
 	// 如果 obj 不是 appsv1 对象， 则推出
@@ -92,20 +95,36 @@ func (d *DeploymentCache) extract(obj interface{}) (set map[string]*appsv1.Deplo
 	}
 
 	namespace := dep.Namespace
-
-	// 提取 sync.Map 中的对象
-	objSet, ok := d.tank.Load(namespace)
-	// 如果当前 namesapce 不存在， 则新建
-	if !ok {
-		objSet = newDeploymentSet()
-		d.tank.Store(namespace, objSet)
-	}
-
-	// 检查 objSet 类型检查
-	set, ok = objSet.(map[string]*appsv1.Deployment)
+	mapper, ok = d.getDeploymentMapper(namespace)
 	if !ok {
 		return nil, dep, false
 	}
 
-	return set, dep, true
+	return mapper, dep, true
+}
+
+func (d *DeploymentCache) ListDeployments(ctx context.Context, namespace string) ([]appsv1.Deployment, error) {
+	d.rwmu.RLock()
+	defer d.rwmu.RUnlock()
+
+	mapper, _ := d.getDeploymentMapper(namespace)
+
+	// 返回非指针对象，兼容 appsv1.DeploymentList.Items()
+	depList := []appsv1.Deployment{}
+	for key := range mapper {
+		depList = append(depList, *mapper[key])
+	}
+
+	return depList, nil
+}
+
+func (d *DeploymentCache) getDeploymentMapper(namespace string) (mapper DeploymentMapper, ok bool) {
+	obj, ok := d.tank.Load(namespace)
+	if !ok {
+		obj := newDeploymentMap()
+		d.tank.Store(namespace, obj)
+	}
+
+	mapper, ok = obj.(DeploymentMapper)
+	return mapper, ok
 }

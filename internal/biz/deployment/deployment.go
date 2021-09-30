@@ -6,6 +6,7 @@ import (
 
 	"github.com/tangx/k8sailor/internal/biz/pod"
 	"github.com/tangx/k8sailor/internal/biz/replicaset"
+	"github.com/tangx/k8sailor/internal/k8scache"
 	"github.com/tangx/k8sailor/internal/k8sdao"
 	appsv1 "k8s.io/api/apps/v1"
 )
@@ -39,15 +40,21 @@ type ListDeploymentsInput struct {
 }
 
 // ListDeployments 获取 namespace 下的所有 deployments
+// 业务层，可以对接不同来源的数据。
 func ListDeployments(ctx context.Context, input ListDeploymentsInput) ([]*Deployment, error) {
 
-	v1Deps, err := k8sdao.ListDeployments(ctx, input.Namespace)
+	/* k8s api 返回的数据 */
+	// v1Deps, err := k8sdao.ListDeployments(ctx, input.Namespace)
+
+	/* 使用 informer 保存在本地的 cache 数据 */
+	v1Deps, err := k8scache.DepTank.ListDeployments(ctx, input.Namespace)
+
 	if err != nil {
 		return nil, err
 	}
 
-	deps := make([]*Deployment, len(v1Deps.Items))
-	for i, item := range v1Deps.Items {
+	deps := make([]*Deployment, len(v1Deps))
+	for i, item := range v1Deps {
 		deps[i] = extractDeployment(item)
 	}
 
