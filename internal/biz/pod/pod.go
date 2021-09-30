@@ -32,7 +32,8 @@ type GetPodsByLabelsInput struct {
 
 func GetPodsByLabels(ctx context.Context, input GetPodsByLabelsInput) ([]*Pod, error) {
 
-	v1Pods, err := k8sdao.GetPodByLabels(ctx, input.Namespace, input.Labels)
+	selector := k8sdao.ConvertMapToSelector(input.Labels)
+	v1Pods, err := k8sdao.GetPodByLabels(ctx, input.Namespace, selector)
 	if err != nil {
 		return nil, err
 	}
