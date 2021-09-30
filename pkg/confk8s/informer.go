@@ -1,6 +1,7 @@
 package confk8s
 
 import (
+	"fmt"
 	"time"
 
 	"k8s.io/apimachinery/pkg/util/wait"
@@ -57,5 +58,6 @@ func (inf *Informer) WithClientset(clientset *kubernetes.Clientset) *Informer {
 }
 
 func (inf *Informer) Start() {
+	fmt.Println("starting informer factory")
 	inf.factory.Start(wait.NeverStop)
 }
