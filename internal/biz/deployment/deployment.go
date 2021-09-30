@@ -68,7 +68,12 @@ type GetDeploymentByNameInput struct {
 
 // GetDeploymentByName 通过名称获取 deployment
 func GetDeploymentByName(ctx context.Context, input GetDeploymentByNameInput) (*Deployment, error) {
-	v1dep, err := k8sdao.GetDeploymentByName(ctx, input.Namespace, input.Name)
+
+	/* k8s api 返回的数据 */
+	// v1dep, err := k8sdao.GetDeploymentByName(ctx, input.Namespace, input.Name)
+
+	/* 使用本地的 k8scache */
+	v1dep, err := k8scache.DepTank.GetDeploymentByName(ctx, input.Namespace, input.Name)
 	if err != nil {
 		return nil, err
 	}

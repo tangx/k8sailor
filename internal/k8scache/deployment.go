@@ -2,6 +2,7 @@ package k8scache
 
 import (
 	"context"
+	"fmt"
 	"sync"
 
 	"github.com/sirupsen/logrus"
@@ -103,6 +104,20 @@ func (d *DeploymentCache) extract(obj interface{}) (mapper DeploymentMapper, dep
 	return mapper, dep, true
 }
 
+func (d *DeploymentCache) getDeploymentMapper(namespace string) (mapper DeploymentMapper, ok bool) {
+	obj, ok := d.tank.Load(namespace)
+	if !ok {
+		obj := newDeploymentMap()
+		d.tank.Store(namespace, obj)
+	}
+
+	mapper, ok = obj.(DeploymentMapper)
+	return mapper, ok
+}
+
+/* 业务功能 */
+
+// ListDeployments 返回 namespace 下的所有 deployments
 func (d *DeploymentCache) ListDeployments(ctx context.Context, namespace string) ([]appsv1.Deployment, error) {
 	d.rwmu.RLock()
 	defer d.rwmu.RUnlock()
@@ -118,13 +133,15 @@ func (d *DeploymentCache) ListDeployments(ctx context.Context, namespace string)
 	return depList, nil
 }
 
-func (d *DeploymentCache) getDeploymentMapper(namespace string) (mapper DeploymentMapper, ok bool) {
-	obj, ok := d.tank.Load(namespace)
-	if !ok {
-		obj := newDeploymentMap()
-		d.tank.Store(namespace, obj)
-	}
+func (d *DeploymentCache) GetDeploymentByName(ctx context.Context, namespace string, name string) (*appsv1.Deployment, error) {
+	d.rwmu.RLock()
+	defer d.rwmu.RUnlock()
 
-	mapper, ok = obj.(DeploymentMapper)
-	return mapper, ok
+	mapper, _ := d.getDeploymentMapper(namespace)
+
+	dep, ok := mapper[name]
+	if !ok {
+		return nil, fmt.Errorf("no deployment named by %s\n", name)
+	}
+	return dep, nil
 }
