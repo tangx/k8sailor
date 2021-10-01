@@ -53,15 +53,17 @@ import { computed, reactive } from '@vue/reactivity'
 import { onMounted, onUnmounted } from '@vue/runtime-core'
 import client, { Deployment } from '../../apis/deployment'
 
-
+// data 页面展示数据
 let data = reactive({
   namespace: "default",
   error: "",
   items: [] as Deployment[]
 })
 
-let onOff = reactive({
-  loop: false
+
+// Switcher 开关
+let Switcher = reactive({
+  LoopData: false
 })
 
 
@@ -89,7 +91,7 @@ const getAllByNamespace = async function (namespace = "default") {
 }
 
 const getAllByNamespaceLoop = async function () {
-  while (onOff.loop) {
+  while (Switcher.LoopData) {
     let f = getAllByNamespace("default")
     await new Promise(f => setTimeout(f, 2000));
   }
@@ -111,16 +113,16 @@ const depDetailLink = function (item: Deployment): string {
 }
 
 onMounted(() => {
-  onOff.loop = true
-  console.log("onMounted: onOFF.loop", onOff.loop);
+  Switcher.LoopData = true
+  console.log("onMounted: onOFF.loop", Switcher.LoopData);
 
   getAllByNamespaceLoop()
 })
 
 onUnmounted(() => {
-  onOff.loop = false
+  Switcher.LoopData = false
 
-  console.log("onUnmounted: onOFF.loop", onOff.loop);
+  console.log("onUnmounted: onOFF.loop", Switcher.LoopData);
 })
 
 
