@@ -27,7 +27,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(item,id) in data.items" key=":id">
+      <tr v-for="(item,id) in data.items" :key="item.name + '-' + item.namespace">
         <th scope="row">{{ id }}</th>
         <td>{{ isActived(item.replicas, item.status.availableReplicas) }}</td>
         <td>
@@ -50,8 +50,9 @@
 
 <script setup lang='ts'>
 import { computed, reactive } from '@vue/reactivity'
-import { onMounted } from '@vue/runtime-core'
+import { onMounted, onUnmounted } from '@vue/runtime-core'
 import client, { Deployment } from '../../apis/deployment'
+
 
 let data = reactive({
   namespace: "default",
@@ -59,11 +60,39 @@ let data = reactive({
   items: [] as Deployment[]
 })
 
+let onOff = reactive({
+  loop: false
+})
+
+
 // getAll 返回所有 deployment 清单
 const getAllByNamespace = async function (namespace = "default") {
   const resp = await client.getAllDeployments(namespace)
-  data.items = resp.data
+  
+  // 对数组进行排序， 避免返回结果数据相同但顺序不同时， vue 不断重新渲染。
+  let _items = resp.data.sort(
+    (n1: Deployment, n2: Deployment) => {
+      if (n1.name >= n2.name) {
+        return 1
+      }
+      return -1
+    }
+  )
+
+  // console.log("_items:", _items);
+
+  data.items = _items
+
   data.error = resp.error
+  // console.log("guodegang");
+
+}
+
+const getAllByNamespaceLoop = async function () {
+  while (onOff.loop) {
+    let f = getAllByNamespace("default")
+    await new Promise(f => setTimeout(f, 2000));
+  }
 }
 
 // imagesJoin 将镜像列表数组连接并返回成字符串
@@ -82,7 +111,16 @@ const depDetailLink = function (item: Deployment): string {
 }
 
 onMounted(() => {
-  getAllByNamespace()
+  onOff.loop = true
+  console.log("onMounted: onOFF.loop", onOff.loop);
+
+  getAllByNamespaceLoop()
+})
+
+onUnmounted(() => {
+  onOff.loop = false
+
+  console.log("onUnmounted: onOFF.loop", onOff.loop);
 })
 
 
