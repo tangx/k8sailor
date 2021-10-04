@@ -86,3 +86,43 @@ typescript 中， 数组 `Array` 有一个方法 `sort( fn(n1,n2):number )`， �
 
 > https://stackoverflow.com/a/21689268
 
+
+## 事件
+
+使用 infromer 订阅 `Core/V1` 的 event 事件， 与 `EventsV1` 的 event 事件略有区别， 大体一致。
+
+```go
+	events, err := clientset.EventsV1().Events("default").List(ctx, v1.ListOptions{})
+	events2, err := clientset.CoreV1().Events("default").List(ctx, v1.ListOptions{})
+```
+
+提取 event 事件的如下信息
+
+```json
+  "involvedObject": {
+    "kind": "Pod",
+    "namespace": "default",
+    "name": "failed-nginx-6df5766f6d-vjn9n",
+    "uid": "8726d44b-06b1-4d1c-9bad-efebf3fbb556",
+    "apiVersion": "v1",
+    "resourceVersion": "685855",
+    "fieldPath": "spec.containers{nginx}"
+  },
+  "reason": "BackOff",
+  "message": "Back-off pulling image \"nginx:alpine-11\"",
+  "source": {
+    "component": "kubelet",
+    "host": "tangxin-test"
+  },
+```
+
+并封装成一个 `map[string]Message` 的格式
+
+```go
+PodEvent["pod-namesapce-podname"] = Message{
+    Reason: "BackOff",
+    Message: "Back-off pulling image \"nginx:alpine-11\"",
+}
+```
+
+
