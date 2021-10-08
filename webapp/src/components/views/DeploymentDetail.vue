@@ -9,7 +9,7 @@
       v-model="data.Item.replicas"
       @keyup.enter="setDeploymentReplicas(data.Item)"
     />
-    <button @keyup.enter="setDeploymentReplicas(data.Item)">设置</button>
+    <button @click="setDeploymentReplicas(data.Item)">设置</button>
   </div>
 
   <div class="pod-container">
