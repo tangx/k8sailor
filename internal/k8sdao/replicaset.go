@@ -7,9 +7,9 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func ListReplicaSet(ctx context.Context, namespace string, labels map[string]string) (*appsv1.ReplicaSetList, error) {
+func ListReplicaSet(ctx context.Context, namespace string, labelSelector string) (*appsv1.ReplicaSetList, error) {
 	opts := metav1.ListOptions{
-		LabelSelector: convertMapToSelector(labels),
+		LabelSelector: labelSelector,
 	}
 
 	return clientset.AppsV1().ReplicaSets(namespace).List(ctx, opts)

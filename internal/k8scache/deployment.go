@@ -9,7 +9,7 @@ import (
 	appsv1 "k8s.io/api/apps/v1"
 )
 
-type DeploymentMapper = map[string]*appsv1.Deployment
+type deploymentMapper = map[string]*appsv1.Deployment
 
 // DeploymentCache 为本地 deployment cache
 //   Tank 水箱， 为 Deployment 的容器
@@ -55,7 +55,7 @@ func (d *DeploymentCache) OnDelete(obj interface{}) {
 }
 
 // onAdd 添加对象
-func (d *DeploymentCache) onAdd(depMap DeploymentMapper, dep *appsv1.Deployment) {
+func (d *DeploymentCache) onAdd(depMap deploymentMapper, dep *appsv1.Deployment) {
 
 	d.rwmu.Lock()
 	defer d.rwmu.Unlock()
@@ -64,7 +64,7 @@ func (d *DeploymentCache) onAdd(depMap DeploymentMapper, dep *appsv1.Deployment)
 	logrus.Debugf("add deployment %s of %s", dep.Name, dep.Namespace)
 }
 
-func (d *DeploymentCache) onDelete(mapper DeploymentMapper, dep *appsv1.Deployment) {
+func (d *DeploymentCache) onDelete(mapper deploymentMapper, dep *appsv1.Deployment) {
 
 	d.rwmu.Lock()
 	defer d.rwmu.Unlock()
@@ -73,7 +73,7 @@ func (d *DeploymentCache) onDelete(mapper DeploymentMapper, dep *appsv1.Deployme
 	logrus.Debugf("delete deployment %s of %s", dep.Name, dep.Namespace)
 }
 
-func (d *DeploymentCache) onUpdate(mapper DeploymentMapper, dep *appsv1.Deployment) {
+func (d *DeploymentCache) onUpdate(mapper deploymentMapper, dep *appsv1.Deployment) {
 
 	d.rwmu.Lock()
 	defer d.rwmu.Unlock()
@@ -82,12 +82,12 @@ func (d *DeploymentCache) onUpdate(mapper DeploymentMapper, dep *appsv1.Deployme
 	logrus.Debugf("update deployment %s of %s", dep.Name, dep.Namespace)
 }
 
-func newDeploymentMap() DeploymentMapper {
-	return make(DeploymentMapper)
+func newDeploymentMap() deploymentMapper {
+	return make(deploymentMapper)
 }
 
 // extract 提取信息
-func (d *DeploymentCache) extract(obj interface{}) (mapper DeploymentMapper, dep *appsv1.Deployment, ok bool) {
+func (d *DeploymentCache) extract(obj interface{}) (mapper deploymentMapper, dep *appsv1.Deployment, ok bool) {
 
 	dep, ok = obj.(*appsv1.Deployment)
 	// 如果 obj 不是 appsv1 对象， 则推出
@@ -104,14 +104,14 @@ func (d *DeploymentCache) extract(obj interface{}) (mapper DeploymentMapper, dep
 	return mapper, dep, true
 }
 
-func (d *DeploymentCache) getDeploymentMapper(namespace string) (mapper DeploymentMapper, ok bool) {
+func (d *DeploymentCache) getDeploymentMapper(namespace string) (mapper deploymentMapper, ok bool) {
 	obj, ok := d.tank.Load(namespace)
 	if !ok {
 		obj := newDeploymentMap()
 		d.tank.Store(namespace, obj)
 	}
 
-	mapper, ok = obj.(DeploymentMapper)
+	mapper, ok = obj.(deploymentMapper)
 	return mapper, ok
 }
 

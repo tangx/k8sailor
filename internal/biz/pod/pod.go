@@ -13,6 +13,7 @@ type Pod struct {
 	Namespace  string            `json:"namespace"`
 	Images     []string          `json:"images"`
 	NodeName   string            `json:"nodeName"`
+	NodeIp     string            `json:"nodeIp"`
 	CreateTime time.Time         `json:"createTime"`
 	PodIP      string            `json:"podIp"`
 	Status     PodStatus         `json:"status"`
@@ -32,7 +33,8 @@ type GetPodsByLabelsInput struct {
 
 func GetPodsByLabels(ctx context.Context, input GetPodsByLabelsInput) ([]*Pod, error) {
 
-	v1Pods, err := k8sdao.GetPodByLabels(ctx, input.Namespace, input.Labels)
+	selector := k8sdao.ConvertMapToSelector(input.Labels)
+	v1Pods, err := k8sdao.GetPodByLabels(ctx, input.Namespace, selector)
 	if err != nil {
 		return nil, err
 	}
@@ -46,6 +48,21 @@ func GetPodsByLabels(ctx context.Context, input GetPodsByLabelsInput) ([]*Pod, e
 	return pods, nil
 }
 
+type GetPodByNameInput struct {
+	Name         string `uri:"name"`
+	Namespace    string `query:"namespace"`
+	OutputFormat string `query:"outputFormat,default=json"`
+}
+
+func GetCorePodByName(ctx context.Context, input GetPodByNameInput) (*corev1.Pod, error) {
+	v1pod, err := k8sdao.GetPodByName(ctx, input.Namespace, input.Name)
+	if err != nil {
+		return nil, err
+	}
+
+	return v1pod, nil
+}
+
 // extractPod 转换成业务本身的 Pod
 func extractPod(item corev1.Pod) *Pod {
 	return &Pod{
@@ -53,6 +70,7 @@ func extractPod(item corev1.Pod) *Pod {
 		Namespace:  item.Namespace,
 		Images:     PodImages(item.Spec),
 		NodeName:   item.Spec.NodeName,
+		NodeIp:     item.Status.HostIP,
 		CreateTime: item.CreationTimestamp.Time,
 		PodIP:      item.Status.PodIP,
 		Status: PodStatus{

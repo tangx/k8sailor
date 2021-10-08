@@ -1,4 +1,5 @@
 import httpc, { HttpcResponse } from './httpc'
+import { Pod } from './pod'
 import qs from 'qs'
 
 // Deployment 是 Deployment 的数据结构

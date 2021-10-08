@@ -19,7 +19,8 @@ type ListReplicaSetInput struct {
 
 // ListReplicaSet 当前有 Pod 的关联的 ReplicaSet
 func ListReplicaSet(ctx context.Context, input ListReplicaSetInput) ([]ReplicaSet, error) {
-	v1Rs, err := k8sdao.ListReplicaSet(ctx, input.Namespace, input.Labels)
+	selector := k8sdao.ConvertMapToSelector(input.Labels)
+	v1Rs, err := k8sdao.ListReplicaSet(ctx, input.Namespace, selector)
 	if err != nil {
 		return nil, err
 	}

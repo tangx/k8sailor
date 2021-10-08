@@ -43,7 +43,10 @@ func (inf *Informer) WithEventHandlers(handlers ...InformerEventHandler) *Inform
 		switch kind {
 		case "deployment":
 			inf.factory.Apps().V1().Deployments().Informer().AddEventHandler(handler)
+		case "event":
+			inf.factory.Core().V1().Events().Informer().AddEventHandler(handler)
 		}
+
 	}
 
 	return inf

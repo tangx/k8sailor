@@ -6,9 +6,10 @@ import (
 
 // Handler Group
 var (
-	DepTank = &DeploymentCache{}
+	DepTank   = &DeploymentCache{}
+	EventTank = &PodEventCache{}
 )
 
 func RegisterHandlers(informer *confk8s.Informer) {
-	informer.WithEventHandlers(DepTank)
+	informer.WithEventHandlers(DepTank, EventTank)
 }

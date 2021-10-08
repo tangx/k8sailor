@@ -7,11 +7,16 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func GetPodByLabels(ctx context.Context, namespace string, labels map[string]string) (*corev1.PodList, error) {
+func GetPodByLabels(ctx context.Context, namespace string, labelSelector string) (*corev1.PodList, error) {
 
 	opts := metav1.ListOptions{
-		LabelSelector: convertMapToSelector(labels),
+		LabelSelector: labelSelector,
 	}
 
 	return clientset.CoreV1().Pods(namespace).List(ctx, opts)
+}
+
+func GetPodByName(ctx context.Context, namespace string, name string) (*corev1.Pod, error) {
+	opts := metav1.GetOptions{}
+	return clientset.CoreV1().Pods(namespace).Get(ctx, name, opts)
 }
