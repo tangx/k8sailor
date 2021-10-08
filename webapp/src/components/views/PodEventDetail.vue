@@ -12,10 +12,9 @@ import { PropType } from '@vue/runtime-core'
 import client, { Pod, PodEvent } from '../../apis/pod'
 
 let props = defineProps({
-  namespace: String,
-  name: String,
   pod: {
     type: Object as PropType<Pod>,
+    required: true
   },
 })
 
