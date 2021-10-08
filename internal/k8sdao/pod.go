@@ -15,3 +15,8 @@ func GetPodByLabels(ctx context.Context, namespace string, labelSelector string)
 
 	return clientset.CoreV1().Pods(namespace).List(ctx, opts)
 }
+
+func GetPodByName(ctx context.Context, namespace string, name string) (*corev1.Pod, error) {
+	opts := metav1.GetOptions{}
+	return clientset.CoreV1().Pods(namespace).Get(ctx, name, opts)
+}

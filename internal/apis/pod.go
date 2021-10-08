@@ -13,6 +13,7 @@ func PodRouterGroup(base *gin.RouterGroup) {
 	pod := base.Group("/pods")
 
 	pod.GET("/:name/event", getPodEventByName)
+	pod.GET("/:name/output", getCorePodByName)
 }
 
 func getPodEventByName(c *gin.Context) {
@@ -28,4 +29,26 @@ func getPodEventByName(c *gin.Context) {
 	event := pod.GetPodEventByName(c, input)
 
 	httpresponse.OK(c, event)
+}
+
+func getCorePodByName(c *gin.Context) {
+	input := pod.GetPodByNameInput{}
+	err := ginbinder.ShouldBindRequest(c, &input)
+	if err != nil {
+		httpresponse.Error(c, http.StatusBadRequest, err)
+		return
+	}
+
+	v1pod, err := pod.GetCorePodByName(c, input)
+	if err != nil {
+		httpresponse.Error(c, http.StatusInternalServerError, err)
+		return
+	}
+
+	if input.OutputFormat == "yaml" {
+		c.YAML(http.StatusOK, v1pod)
+		return
+	}
+
+	c.JSON(http.StatusOK, v1pod)
 }

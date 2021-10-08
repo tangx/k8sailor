@@ -48,6 +48,21 @@ func GetPodsByLabels(ctx context.Context, input GetPodsByLabelsInput) ([]*Pod, e
 	return pods, nil
 }
 
+type GetPodByNameInput struct {
+	Name         string `uri:"name"`
+	Namespace    string `query:"namespace"`
+	OutputFormat string `query:"outputFormat,default=json"`
+}
+
+func GetCorePodByName(ctx context.Context, input GetPodByNameInput) (*corev1.Pod, error) {
+	v1pod, err := k8sdao.GetPodByName(ctx, input.Namespace, input.Name)
+	if err != nil {
+		return nil, err
+	}
+
+	return v1pod, nil
+}
+
 // extractPod 转换成业务本身的 Pod
 func extractPod(item corev1.Pod) *Pod {
 	return &Pod{

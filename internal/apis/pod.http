@@ -1,3 +1,7 @@
 
-## Get Pod event by name
+### Get Pod event by name
 GET http://127.0.0.1:8088/k8sailor/v0/pods/failed-nginx-6df5766f6d-sqnr8/event?namespace=default
+
+
+### Get getCorePodByName
+GET http://127.0.0.1:8088/k8sailor/v0/pods/my-nginx-1-6d9577949b-7hrj6/output/json?namespace=default&outputFormat=yaml

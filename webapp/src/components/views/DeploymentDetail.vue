@@ -50,7 +50,7 @@
           </td>
           <td>{{ pod.createTime }}</td>
           <td>
-            <a href="xxx" target="_blank">详细信息</a>
+            <a :href="podOutput(pod)" target="_blank">详细信息</a>
           </td>
         </tr>
       </tbody>
@@ -150,6 +150,10 @@ let validPodPhase = function (phase: string): boolean {
     return true
   }
   return false
+}
+
+const podOutput=function(pod: Pod): string{
+  return `http://127.0.0.1:8088/k8sailor/v0/pods/${pod.name}/output?namespace=${pod.namespace}&outputFormat=json`
 }
 
 onMounted(() => {
