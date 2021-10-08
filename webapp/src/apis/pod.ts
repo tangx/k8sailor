@@ -5,6 +5,7 @@ export interface Pod {
     namespace: string
     images: string[]
     nodeName: string
+    nodeIp: string
     createTime: string
     podIp: string
     status: {

@@ -18,20 +18,23 @@
         <tr>
           <th scope="col">Pod Name</th>
           <th scope="col">Status</th>
-          <th scope="col">Node</th>
-          <th scope="col">Ipaddr</th>
+          <th scope="col">Node Info</th>
           <th scope="col">CreateTime</th>
+          <th scope="col">Json Info</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(pod,idx) of data.Pods" :key="pod.name">
-          <td>{{ pod.name }}</td>
+          <td>
+            <div>{{ pod.name }}</div>
+            <div class="color-gray">{{ pod.podIp }}</div>
+          </td>
           <td>
             {{ pod.status.phase }}
             <template v-if="!validPodPhase(pod.status.phase)">
               <Suspense>
                 <template #default>
-                  <div >
+                  <div>
                     <PodEventDetail :pod="pod" :namespace="pod.namespace" :name="pod.name" />
                   </div>
                 </template>
@@ -41,9 +44,14 @@
               </Suspense>
             </template>
           </td>
-          <td>{{ pod.nodeName }}</td>
-          <td>{{ pod.podIp }}</td>
+          <td>
+            <div>{{ pod.nodeName }}</div>
+            <div class="color-gray">{{ pod.nodeIp }}</div>
+          </td>
           <td>{{ pod.createTime }}</td>
+          <td>
+            <a href="xxx" target="_blank">详细信息</a>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -164,5 +172,9 @@ onUnmounted(() => {
   font-weight: 5000;
   // font: bold;
   color: #0f65fd;
+}
+
+.color-gray {
+  color: gray;
 }
 </style>

@@ -13,6 +13,7 @@ type Pod struct {
 	Namespace  string            `json:"namespace"`
 	Images     []string          `json:"images"`
 	NodeName   string            `json:"nodeName"`
+	NodeIp     string            `json:"nodeIp"`
 	CreateTime time.Time         `json:"createTime"`
 	PodIP      string            `json:"podIp"`
 	Status     PodStatus         `json:"status"`
@@ -54,6 +55,7 @@ func extractPod(item corev1.Pod) *Pod {
 		Namespace:  item.Namespace,
 		Images:     PodImages(item.Spec),
 		NodeName:   item.Spec.NodeName,
+		NodeIp:     item.Status.HostIP,
 		CreateTime: item.CreationTimestamp.Time,
 		PodIP:      item.Status.PodIP,
 		Status: PodStatus{
