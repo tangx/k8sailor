@@ -20,3 +20,8 @@ func GetPodByName(ctx context.Context, namespace string, name string) (*corev1.P
 	opts := metav1.GetOptions{}
 	return clientset.CoreV1().Pods(namespace).Get(ctx, name, opts)
 }
+
+func DeletePodByName(ctx context.Context, namespace string, name string) error {
+	opts := metav1.DeleteOptions{}
+	return clientset.CoreV1().Pods(namespace).Delete(ctx, name, opts)
+}

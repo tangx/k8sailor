@@ -2,6 +2,7 @@ package pod
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/tangx/k8sailor/internal/k8sdao"
@@ -61,6 +62,21 @@ func GetCorePodByName(ctx context.Context, input GetPodByNameInput) (*corev1.Pod
 	}
 
 	return v1pod, nil
+}
+
+type DeletePodByNameInput struct {
+	Name      string `uri:"name"`
+	Namespace string `query:"namespace"`
+}
+
+// DeletePodByName 根据名字 删除 pod
+func DeletePodByName(ctx context.Context, input DeletePodByNameInput) error {
+	err := k8sdao.DeletePodByName(ctx, input.Namespace, input.Name)
+	if err != nil {
+		return fmt.Errorf("k8s internal error: %w", err)
+	}
+
+	return nil
 }
 
 // extractPod 转换成业务本身的 Pod

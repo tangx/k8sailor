@@ -12,8 +12,23 @@ import (
 func PodRouterGroup(base *gin.RouterGroup) {
 	pod := base.Group("/pods")
 
+	pod.DELETE("/:name", deletePodByName)
 	pod.GET("/:name/event", getPodEventByName)
 	pod.GET("/:name/output", getCorePodByName)
+}
+
+func deletePodByName(c *gin.Context) {
+	input := pod.DeletePodByNameInput{}
+	if err := ginbinder.ShouldBindRequest(c, &input); err != nil {
+		httpresponse.Error(c, http.StatusBadRequest, err)
+		return
+	}
+
+	if err := pod.DeletePodByName(c, input); err != nil {
+		httpresponse.Error(c, http.StatusInternalServerError, err)
+		return
+	}
+	httpresponse.OK(c, true)
 }
 
 func getPodEventByName(c *gin.Context) {

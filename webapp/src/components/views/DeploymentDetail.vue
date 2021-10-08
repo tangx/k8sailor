@@ -21,6 +21,7 @@
           <th scope="col">Node Info</th>
           <th scope="col">CreateTime</th>
           <th scope="col">Json Info</th>
+          <th scope="col">Action</th>
         </tr>
       </thead>
       <tbody>
@@ -50,7 +51,10 @@
           </td>
           <td>{{ pod.createTime }}</td>
           <td>
-            <a :href="podOutput(pod)" target="_blank">详细信息</a>
+            <a :href="getPodOutputUrl(pod)" target="_blank">详细信息</a>
+          </td>
+          <td>
+            <button class="btn btn-danger" @click="deletePodByName(pod)">删除</button>
           </td>
         </tr>
       </tbody>
@@ -62,10 +66,11 @@
 import { onMounted, onUnmounted } from "@vue/runtime-core";
 import { useRouter } from "vue-router";
 import client, { Deployment } from "../../apis/deployment";
-import { Pod } from "../../apis/pod"
+import podClient, { Pod } from "../../apis/pod"
 // import PodEventDetail from "./PodEventDetail.vue";
 import { defineAsyncComponent } from "vue";
 const PodEventDetail = defineAsyncComponent(() => import("./PodEventDetail.vue"));
+
 
 
 
@@ -95,7 +100,7 @@ const fetchDataLoop = async function () {
   while (Swither.LoopData) {
     getDeploymentPods()
 
-    await new Promise(f => setTimeout(f, 2000))
+    await new Promise(f => setTimeout(f, 1000))
   }
 }
 
@@ -152,8 +157,12 @@ let validPodPhase = function (phase: string): boolean {
   return false
 }
 
-const podOutput=function(pod: Pod): string{
+const getPodOutputUrl = function (pod: Pod): string {
   return `http://127.0.0.1:8088/k8sailor/v0/pods/${pod.name}/output?namespace=${pod.namespace}&outputFormat=json`
+}
+
+const deletePodByName = async function (pod: Pod) {
+  podClient.deletePodByName(pod.namespace, pod.name)
 }
 
 onMounted(() => {

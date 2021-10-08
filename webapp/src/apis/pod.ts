@@ -36,6 +36,17 @@ async function getPodEventByName(namespace: string, name: string): Promise<PodEv
     return resp.data
 }
 
+interface PodDeleteResponse extends HttpcResponse {
+    data: boolean
+}
+async function deletePodByName(namespace: string, name: string): Promise<PodDeleteResponse> {
+    const uri = `/pods/${name}?namespace=${namespace}`
+    const resp = await httpc.delete(uri)
+
+    return resp.data
+}
+
 export default {
-    getPodEventByName
+    getPodEventByName,
+    deletePodByName,
 }
