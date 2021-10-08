@@ -1,4 +1,7 @@
-# some optimize 
+# 一些优化 
+
+> tag: https://github.com/tangx/k8sailor/tree/feat/14-some-optimize
+
 
 ## 将 LabelSelector 转换为 Selector
 
