@@ -1,4 +1,4 @@
-# modify
+# some optimize 
 
 ## 将 LabelSelector 转换为 Selector
 
@@ -87,7 +87,7 @@ typescript 中， 数组 `Array` 有一个方法 `sort( fn(n1,n2):number )`， �
 > https://stackoverflow.com/a/21689268
 
 
-## 事件
+## 使用 informer 订阅 k8s event
 
 使用 infromer 订阅 `Core/V1` 的 event 事件， 与 `EventsV1` 的 event 事件略有区别， 大体一致。
 
