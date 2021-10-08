@@ -4,7 +4,11 @@
     namespace: {{ data.Item.namespace }} &nbsp;
     deployment: {{ data.Item.name }} &nbsp;
     <br />replicas:
-    <input type="text" v-model="data.Item.replicas" @keyup.enter="setDeploymentReplicas(data.Item)" />
+    <input
+      type="text"
+      v-model="data.Item.replicas"
+      @keyup.enter="setDeploymentReplicas(data.Item)"
+    />
     <button @keyup.enter="setDeploymentReplicas(data.Item)">设置</button>
   </div>
 
@@ -22,7 +26,21 @@
       <tbody>
         <tr v-for="(pod,idx) of data.Pods" :key="pod.name">
           <td>{{ pod.name }}</td>
-          <td>{{ pod.status.phase }}</td>
+          <td>
+            {{ pod.status.phase }}
+            <template v-if="!validPodPhase(pod.status.phase)">
+              <Suspense>
+                <template #default>
+                  <div >
+                    <PodEventDetail :pod="pod" :namespace="pod.namespace" :name="pod.name" />
+                  </div>
+                </template>
+                <template #fallback>
+                  <div>等待中</div>
+                </template>
+              </Suspense>
+            </template>
+          </td>
           <td>{{ pod.nodeName }}</td>
           <td>{{ pod.podIp }}</td>
           <td>{{ pod.createTime }}</td>
@@ -36,6 +54,12 @@
 import { onMounted, onUnmounted } from "@vue/runtime-core";
 import { useRouter } from "vue-router";
 import client, { Deployment } from "../../apis/deployment";
+import { Pod } from "../../apis/pod"
+// import PodEventDetail from "./PodEventDetail.vue";
+import { defineAsyncComponent } from "vue";
+const PodEventDetail = defineAsyncComponent(() => import("./PodEventDetail.vue"));
+
+
 
 // data 页面展示参数
 let data = reactive({
@@ -65,8 +89,6 @@ const fetchDataLoop = async function () {
 
     await new Promise(f => setTimeout(f, 2000))
   }
-  console.log("guodegang");
-
 }
 
 const fetchData = function () {
@@ -115,6 +137,12 @@ const fetchUrlParams = function () {
 
 }
 
+let validPodPhase = function (phase: string): boolean {
+  if (phase === "Running") {
+    return true
+  }
+  return false
+}
 
 onMounted(() => {
   Swither.LoopData = true

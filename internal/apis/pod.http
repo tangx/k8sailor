@@ -1,3 +1,3 @@
 
 ## Get Pod event by name
-GET http://127.0.0.1:8088/k8sailor/v0/pods/failed-nginx-6df5766f6d-vjn9n/event?namespace=default
+GET http://127.0.0.1:8088/k8sailor/v0/pods/failed-nginx-6df5766f6d-sqnr8/event?namespace=default

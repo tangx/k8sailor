@@ -126,3 +126,71 @@ PodEvent["pod-namesapce-podname"] = Message{
 ```
 
 
+
+### defineProps 传入自定义类型
+
+#### setup 语法中怎么使用 props 传递值
+
+> https://v3.vuejs.org/api/sfc-script-setup.html#defineprops-and-defineemits
+
+
+#### 传入一个对象
+
+> https://v3.vuejs.org/guide/component-props.html#passing-an-object
+
+```html
+<blog-post
+  :author="{
+    name: 'Veronica',
+    company: 'Veridian Dynamics'
+  }"
+></blog-post>
+```
+
+#### 如何传递自定义类型
+
+> https://v3.vuejs.org/api/options-data.html#props
+
+
+Props 支持 **默认** 的几种类型（全都是 vue 自定义的 interface，所以首写字母都是大写）。 以及自定义的类型
+
+> type: can be one of the following native constructors: String, Number, Boolean, Array, Object, Date, Function, Symbol, any `custom constructor function` or an array of those. Will check if a prop has a given type, and will throw a warning if it doesn't. More information on prop types.
+
+
+#### defineProps 使用 PropType 实现自定义类型支持
+
+> https://v3.vuejs.org/guide/typescript-support.html#annotating-props
+
+```ts
+import { defineComponent, PropType } from 'vue'
+
+interface Book {
+  title: string
+  author: string
+  year: number
+}
+
+const Component = defineComponent({
+  props: {
+    name: String,
+    id: [Number, String],
+    success: { type: String },
+    callback: {
+      type: Function as PropType<() => void>
+    },
+
+    // 使用对象模式表述属性
+    book: {
+      // 注意这里， 使用 PropType 定义 Constructor
+      type: Object as PropType<Book>,
+      required: true
+    },
+    metadata: {
+      type: null // metadata is typed as any
+    }
+  }
+})
+```
+
++ https://stackoverflow.com/questions/64325502/vue-js-3-props-type-validation-with-custom-type/64325609
++ https://v3.vuejs.org/guide/component-props.html#type-checks

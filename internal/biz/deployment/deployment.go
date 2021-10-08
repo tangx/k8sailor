@@ -121,7 +121,7 @@ func GetPodsByDeployment(ctx context.Context, input GetPodsByDeploymentInput) ([
 		if err != nil {
 			return nil, err
 		}
-		fmt.Println(len(pods), pods)
+		// fmt.Println(len(pods), pods)
 		allPods = append(allPods, pods...)
 	}
 
