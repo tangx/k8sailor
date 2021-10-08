@@ -71,6 +71,17 @@ async function setDeploymentReplicas(namespace: string, name: string, replicas: 
     return resp.data
 }
 
+interface DeleteDeploymentByName extends HttpcResponse {
+    data: boolean
+}
+// deleteDeploymentByName 根据名字删除 deployment
+async function deleteDeploymentByName(namespace: string, name: string): Promise<DeleteDeploymentByName> {
+
+    const u = `/deployments/${name}?namespace=${namespace}`
+    const resp = await httpc.delete(u)
+    return resp.data
+
+}
 
 // 导出所有方法
 export default {
@@ -78,4 +89,5 @@ export default {
     getDeploymentByName,
     getDeploymentPodsByName,
     setDeploymentReplicas,
+    deleteDeploymentByName,
 }

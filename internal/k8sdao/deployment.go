@@ -49,3 +49,8 @@ func SetDeploymentReplicas(ctx context.Context, namespace string, name string, r
 
 	return nil
 }
+
+func DeleteDeploymentByName(ctx context.Context, namespace string, name string) error {
+	opts := metav1.DeleteOptions{}
+	return clientset.AppsV1().Deployments(namespace).Delete(ctx, name, opts)
+}

@@ -155,6 +155,20 @@ func SetDeploymentReplicas(ctx context.Context, input SetDeploymentReplicasInput
 	return err == nil, err
 }
 
+type DeleteDeploymentByNameInput struct {
+	Name      string `uri:"name"`
+	Namespace string `query:"namespace"`
+}
+
+// DeleteDeploymentByName 根据名字删除 deployment
+func DeleteDeploymentByName(ctx context.Context, input DeleteDeploymentByNameInput) error {
+	err := k8sdao.DeleteDeploymentByName(ctx, input.Namespace, input.Name)
+	if err != nil {
+		return fmt.Errorf("k8s internal error: %w", err)
+	}
+	return nil
+}
+
 // extractDeployment 转换成业务本身的 Deployment
 func extractDeployment(item appsv1.Deployment) *Deployment {
 	return &Deployment{

@@ -47,9 +47,25 @@ func DeploymentRouterGroup(base *gin.RouterGroup) {
 
 		// 针对特定的命名资源操作
 		dep.GET("/:name", hanlderGetDeploymentByName)
+		dep.DELETE("/:name", handlerDeleteDeploymentByName)
 		dep.GET("/:name/pods", handlerGetPodsByDeployment)
 		dep.PUT("/:name/replicas", handlerSetDeploymentReplicas)
 	}
+}
+
+func handlerDeleteDeploymentByName(c *gin.Context) {
+	input := deployment.DeleteDeploymentByNameInput{}
+	if err := ginbinder.ShouldBindRequest(c, &input); err != nil {
+		httpresponse.Error(c, http.StatusBadRequest, err)
+		return
+	}
+
+	if err := deployment.DeleteDeploymentByName(c, input); err != nil {
+		httpresponse.Error(c, http.StatusInternalServerError, err)
+		return
+	}
+
+	httpresponse.OK(c, true)
 }
 
 // handlerListDeployments 获取所有 deployments

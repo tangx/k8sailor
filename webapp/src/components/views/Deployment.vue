@@ -24,6 +24,7 @@
         <th scope="col">期望副本数量</th>
         <th scope="col">镜像列表</th>
         <th scope="col">Pod 总数/可用/不可用</th>
+        <th scope="col">Action</th>
       </tr>
     </thead>
     <tbody>
@@ -42,6 +43,9 @@
           <span>{{ item.status.availableReplicas }}</span>
           <span>/</span>
           <span>{{ item.status.unavailableReplicas }}</span>
+        </td>
+        <td>
+          <button class="btn btn-danger" @click="deleteDeploymentByname(item)">删除</button>
         </td>
       </tr>
     </tbody>
@@ -70,7 +74,7 @@ let Switcher = reactive({
 // getAll 返回所有 deployment 清单
 const getAllByNamespace = async function (namespace = "default") {
   const resp = await client.getAllDeployments(namespace)
-  
+
   // 对数组进行排序， 避免返回结果数据相同但顺序不同时， vue 不断重新渲染。
   let _items = resp.data.sort(
     (n1: Deployment, n2: Deployment) => {
@@ -110,6 +114,16 @@ const isActived = function (replicas: number, availableReplicas: number): boolea
 // deployment 详情页计算属性
 const depDetailLink = function (item: Deployment): string {
   return `/deployments/${item.name}?namespace=${item.namespace}`
+}
+
+// deleteDeploymentByname 根据名字删除 deployment 
+const deleteDeploymentByname = async function (dep: Deployment) {
+  const resp = await client.deleteDeploymentByName(dep.namespace, dep.name)
+
+  if (resp.code!==0){
+    console.log("delete pod failed: ",resp.error);
+    return
+  }
 }
 
 onMounted(() => {
