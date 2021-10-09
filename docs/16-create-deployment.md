@@ -1,5 +1,6 @@
 # 创建 deployment
 
+> tag: https://github.com/tangx/k8sailor/tree/feat/16-create-deployment
 
 使用 kubectl 命令创建如下
 ```bash
