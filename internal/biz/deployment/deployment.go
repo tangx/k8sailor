@@ -173,16 +173,16 @@ type CreateDeploymentByNameInput struct {
 	Namespace string `query:"namespace"`
 	Name      string `uri:"name"`
 	Body      struct {
-		Replicas *int32   `json:"replicas"`
-		Images   []string `json:"images"`
+		Replicas   *int32             `json:"replicas"`
+		Containers []k8sdao.Container `json:"containers"`
 	} `body:"" mime:"json"`
 }
 
 func CreateDeploymentByName(ctx context.Context, input CreateDeploymentByNameInput) (*Deployment, error) {
 	depInput := k8sdao.CreateDeploymentInput{
-		Name:     input.Name,
-		Replicas: input.Body.Replicas,
-		Images:   input.Body.Images,
+		Name:       input.Name,
+		Replicas:   input.Body.Replicas,
+		Containers: input.Body.Containers,
 	}
 
 	v1dep, err := k8sdao.CreateDeployment(ctx, input.Namespace, depInput)

@@ -59,9 +59,13 @@ func DeleteDeploymentByName(ctx context.Context, namespace string, name string) 
 }
 
 type CreateDeploymentInput struct {
-	Name     string
-	Replicas *int32
-	Images   []string
+	Name       string
+	Replicas   *int32
+	Containers []Container
+}
+type Container struct {
+	Image string `json:"image"`
+	Ports []int  `json:"ports,omitempty"`
 }
 
 func CreateDeployment(ctx context.Context, namespace string, input CreateDeploymentInput) (*appsv1.Deployment, error) {
@@ -88,7 +92,7 @@ func CreateDeployment(ctx context.Context, namespace string, input CreateDeploym
 					Labels: labels,
 				},
 				Spec: corev1.PodSpec{
-					Containers: containers(input.Images),
+					Containers: containers(input.Containers),
 				},
 			},
 		},
@@ -99,18 +103,30 @@ func CreateDeployment(ctx context.Context, namespace string, input CreateDeploym
 
 }
 
-func containers(images []string) []corev1.Container {
-	containers := make([]corev1.Container, len(images))
-	for i, image := range images {
+func containers(containers []Container) []corev1.Container {
+	v1Containers := make([]corev1.Container, len(containers))
+	for i, container := range containers {
 		container := corev1.Container{
-			Image: image,
-			Name:  imageName(i, image),
+			Image: container.Image,
+			Name:  imageName(i, container.Image),
+			Ports: containerPorts(container.Ports),
 		}
 
-		containers[i] = container
+		v1Containers[i] = container
 	}
 
-	return containers
+	return v1Containers
+}
+
+func containerPorts(ports []int) []corev1.ContainerPort {
+	v1ContainerPorts := make([]corev1.ContainerPort, len(ports))
+	for i, port := range ports {
+		v1ContainerPorts[i] = corev1.ContainerPort{
+			Name:          fmt.Sprintf("port-%d", port),
+			ContainerPort: int32(port),
+		}
+	}
+	return v1ContainerPorts
 }
 
 func imageName(i int, image string) string {

@@ -18,13 +18,20 @@ PUT http://127.0.0.1:8088/k8sailor/v0/deployments/failed-nginx/replicas?replicas
 Content-Type: application/json
 
 ### CreateDeployment
-POST http://127.0.0.1:8088/k8sailor/v0/deployments/new-nginx-03?namespace=default
+POST http://127.0.0.1:8088/k8sailor/v0/deployments/new-nginx-05?namespace=default
 Content-Type: application/json
 
 {
-    "replicas":2,
-    "images":[
-        "nginx:alpine",
-        "nginx:1.13-alpine"
+    "replicas":1,
+    "containers":[
+        {
+            "image":"nginx:alpine",
+            "ports": [80]
+        },
+        {
+            "image":"nginx:alpine",
+            "ports": [8088]
+        }
+
     ]
 }
