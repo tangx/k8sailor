@@ -3,8 +3,11 @@ package k8sdao
 import (
 	"context"
 	"errors"
+	"fmt"
+	"strings"
 
 	appsv1 "k8s.io/api/apps/v1"
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -53,4 +56,60 @@ func SetDeploymentReplicas(ctx context.Context, namespace string, name string, r
 func DeleteDeploymentByName(ctx context.Context, namespace string, name string) error {
 	opts := metav1.DeleteOptions{}
 	return clientset.AppsV1().Deployments(namespace).Delete(ctx, name, opts)
+}
+
+type CreateDeploymentInput struct {
+	Name     string
+	Replicas *int32
+	Image    []string
+}
+
+func CreateDeployment(ctx context.Context, namespace string, input CreateDeploymentInput) {
+	labels := map[string]string{
+		"app": input.Name,
+	}
+	dep := &appsv1.Deployment{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      input.Name,
+			Namespace: namespace,
+			Labels:    labels,
+		},
+		Spec: appsv1.DeploymentSpec{
+			Replicas: input.Replicas,
+			Selector: &metav1.LabelSelector{
+				MatchLabels: labels,
+			},
+			Template: corev1.PodTemplateSpec{
+				ObjectMeta: metav1.ObjectMeta{
+					Labels: labels,
+				},
+				Spec: corev1.PodSpec{
+					Containers: containers(input.Image),
+				},
+			},
+		},
+	}
+	opts := metav1.CreateOptions{}
+
+	clientset.AppsV1().Deployments(namespace).Create(ctx, dep, opts)
+}
+
+func containers(images []string) []corev1.Container {
+	containers := make([]corev1.Container, len(images))
+	for i, image := range images {
+		container := corev1.Container{
+			Image: image,
+			Name:  imageName(i, image),
+		}
+
+		containers[i] = container
+	}
+
+	return containers
+}
+
+func imageName(i int, image string) string {
+	name := strings.ReplaceAll(image, "/", "-")
+	name = strings.ReplaceAll(name, ":", "-")
+	return fmt.Sprintf("%s-%d", name, i)
 }
