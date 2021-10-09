@@ -61,10 +61,10 @@ func DeleteDeploymentByName(ctx context.Context, namespace string, name string) 
 type CreateDeploymentInput struct {
 	Name     string
 	Replicas *int32
-	Image    []string
+	Images   []string
 }
 
-func CreateDeployment(ctx context.Context, namespace string, input CreateDeploymentInput) {
+func CreateDeployment(ctx context.Context, namespace string, input CreateDeploymentInput) (*appsv1.Deployment, error) {
 	labels := map[string]string{
 		"app": input.Name,
 	}
@@ -73,6 +73,10 @@ func CreateDeployment(ctx context.Context, namespace string, input CreateDeploym
 			Name:      input.Name,
 			Namespace: namespace,
 			Labels:    labels,
+			// 在 CI 的时候， 可以在这里加上关键的 commit 信息。
+			Annotations: map[string]string{
+				"manager": "k8sailor",
+			},
 		},
 		Spec: appsv1.DeploymentSpec{
 			Replicas: input.Replicas,
@@ -84,14 +88,15 @@ func CreateDeployment(ctx context.Context, namespace string, input CreateDeploym
 					Labels: labels,
 				},
 				Spec: corev1.PodSpec{
-					Containers: containers(input.Image),
+					Containers: containers(input.Images),
 				},
 			},
 		},
 	}
 	opts := metav1.CreateOptions{}
 
-	clientset.AppsV1().Deployments(namespace).Create(ctx, dep, opts)
+	return clientset.AppsV1().Deployments(namespace).Create(ctx, dep, opts)
+
 }
 
 func containers(images []string) []corev1.Container {
@@ -109,7 +114,8 @@ func containers(images []string) []corev1.Container {
 }
 
 func imageName(i int, image string) string {
-	name := strings.ReplaceAll(image, "/", "-")
-	name = strings.ReplaceAll(name, ":", "-")
-	return fmt.Sprintf("%s-%d", name, i)
+	for _, char := range []string{"/", ":", "."} {
+		image = strings.ReplaceAll(image, char, "-")
+	}
+	return fmt.Sprintf("%s-%d", image, i)
 }
