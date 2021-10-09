@@ -16,3 +16,22 @@ Content-Type: application/json
 #   不传入 namespace 是因为 gin/ginbinder 有可以设置默认值
 PUT http://127.0.0.1:8088/k8sailor/v0/deployments/failed-nginx/replicas?replicas=2
 Content-Type: application/json
+
+### CreateDeployment
+POST http://127.0.0.1:8088/k8sailor/v0/deployments/new-nginx-05?namespace=default
+Content-Type: application/json
+
+{
+    "replicas":1,
+    "containers":[
+        {
+            "image":"nginx:alpine",
+            "ports": [80]
+        },
+        {
+            "image":"nginx:alpine",
+            "ports": [8088]
+        }
+
+    ]
+}

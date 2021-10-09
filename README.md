@@ -32,7 +32,7 @@ golang 练习的前后端
     + 使用 informer 订阅 k8s event
     + defineProps 传入自定义类型
 10. [根据名字删除 deployment 和 pod](./docs/15-delete-deployment-and-pod-by-name.md)
-
+11. [创建 deployment](./docs/16-create-deployment.md)
 ## feed
 
 ![wx-qrcode](https://tangx.in/assets/images/wx-qrcode.png)

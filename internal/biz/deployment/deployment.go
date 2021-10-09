@@ -169,6 +169,31 @@ func DeleteDeploymentByName(ctx context.Context, input DeleteDeploymentByNameInp
 	return nil
 }
 
+type CreateDeploymentByNameInput struct {
+	Namespace string `query:"namespace"`
+	Name      string `uri:"name"`
+	Body      struct {
+		Replicas   *int32             `json:"replicas"`
+		Containers []k8sdao.Container `json:"containers"`
+	} `body:"" mime:"json"`
+}
+
+func CreateDeploymentByName(ctx context.Context, input CreateDeploymentByNameInput) (*Deployment, error) {
+	depInput := k8sdao.CreateDeploymentInput{
+		Name:       input.Name,
+		Replicas:   input.Body.Replicas,
+		Containers: input.Body.Containers,
+	}
+
+	v1dep, err := k8sdao.CreateDeployment(ctx, input.Namespace, depInput)
+	if err != nil {
+		return nil, err
+	}
+
+	dep := extractDeployment(*v1dep)
+	return dep, nil
+}
+
 // extractDeployment 转换成业务本身的 Deployment
 func extractDeployment(item appsv1.Deployment) *Deployment {
 	return &Deployment{
