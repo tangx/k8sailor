@@ -81,6 +81,19 @@ func DeletePodByName(ctx context.Context, input DeletePodByNameInput) error {
 
 // extractPod 转换成业务本身的 Pod
 func extractPod(item corev1.Pod) *Pod {
+	// phase := item.Status.Phase
+
+	reason := ""
+	message := ""
+	for _, status := range item.Status.ContainerStatuses {
+		// state.State.Waiting.Message
+		if !status.Ready && status.State.Waiting != nil {
+			reason = status.State.Waiting.Reason
+			message = status.State.Waiting.Message
+			break
+		}
+	}
+
 	return &Pod{
 		Name:       item.Name,
 		Namespace:  item.Namespace,
@@ -91,8 +104,8 @@ func extractPod(item corev1.Pod) *Pod {
 		PodIP:      item.Status.PodIP,
 		Status: PodStatus{
 			Phase:   item.Status.Phase,
-			Message: item.Status.Message,
-			Reason:  item.Status.Reason,
+			Message: message,
+			Reason:  reason,
 		},
 		Labels: item.Labels,
 	}

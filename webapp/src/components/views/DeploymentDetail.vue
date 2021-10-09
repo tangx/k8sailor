@@ -29,21 +29,27 @@
           <td>
             <div>{{ pod.name }}</div>
             <div class="color-gray">{{ pod.podIp }}</div>
+            <div>
+              <template v-if="!isValidPodStatus(pod)">
+                <Suspense>
+                  <template #default>
+                    <div>
+                      <PodEventDetail :pod="pod" :namespace="pod.namespace" :name="pod.name" />
+                    </div>
+                  </template>
+                  <template #fallback>
+                    <div>等待中</div>
+                  </template>
+                </Suspense>
+              </template>
+            </div>
           </td>
           <td>
-            {{ pod.status.phase }}
-            <template v-if="!validPodPhase(pod.status.phase)">
-              <Suspense>
-                <template #default>
-                  <div>
-                    <PodEventDetail :pod="pod" :namespace="pod.namespace" :name="pod.name" />
-                  </div>
-                </template>
-                <template #fallback>
-                  <div>等待中</div>
-                </template>
-              </Suspense>
-            </template>
+            <template v-if="isValidPodStatus(pod)">{{ pod.status.phase }}</template>
+            <div>
+              <p class="color-red">{{ pod.status.reason }}</p>
+              <p class="color-gray">{{ pod.status.message }}</p>
+            </div>
           </td>
           <td>
             <div>{{ pod.nodeName }}</div>
@@ -150,8 +156,8 @@ const fetchUrlParams = function () {
 
 }
 
-let validPodPhase = function (phase: string): boolean {
-  if (phase === "Running") {
+let isValidPodStatus = function (pod: Pod): boolean {
+  if (pod.status.reason === "") {
     return true
   }
   return false
@@ -189,5 +195,11 @@ onUnmounted(() => {
 
 .color-gray {
   color: gray;
+}
+.color-red {
+  color: red;
+}
+.color-darkred{
+  color:darkred;
 }
 </style>
