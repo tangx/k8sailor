@@ -10,8 +10,9 @@ import (
 )
 
 func ServiceRouterGroup(base *gin.RouterGroup) {
-	svc := base.Group("/pods")
+	svc := base.Group("/services")
 
+	svc.POST("/:name", createServiceByName)
 	svc.GET("/:name/output", getCoreServiceByName)
 }
 
@@ -29,4 +30,20 @@ func getCoreServiceByName(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, *v1svc)
+}
+
+func createServiceByName(c *gin.Context) {
+	input := service.CreateServcieByNameInput{}
+	if err := ginbinder.ShouldBindRequest(c, &input); err != nil {
+		httpresponse.Error(c, http.StatusBadRequest, err)
+		return
+	}
+
+	svc, err := service.CreateServiceByName(c, input)
+	if err != nil {
+		httpresponse.Error(c, http.StatusInternalServerError, err)
+		return
+	}
+
+	httpresponse.OK(c, svc)
 }
