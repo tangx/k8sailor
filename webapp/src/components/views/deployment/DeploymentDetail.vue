@@ -71,8 +71,8 @@
 <script setup lang='ts'>import { reactive } from "@vue/reactivity";
 import { onMounted, onUnmounted } from "@vue/runtime-core";
 import { useRouter } from "vue-router";
-import client, { Deployment } from "../../apis/deployment";
-import podClient, { Pod } from "../../apis/pod"
+import client, { Deployment } from "@/apis/deployment";
+import podClient, { Pod } from "@/apis/pod";
 // import PodEventDetail from "./PodEventDetail.vue";
 import { defineAsyncComponent } from "vue";
 const PodEventDetail = defineAsyncComponent(() => import("./PodEventDetail.vue"));

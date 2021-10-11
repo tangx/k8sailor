@@ -11,7 +11,7 @@ const routes = [
     {
         path: "/deployments/:name",
         name: "DeploymentDetail",
-        component: () => import('@/components/views/DeploymentDetail.vue')
+        component: () => import('@/components/views/deployment/DeploymentDetail.vue')
     }
 ]
 

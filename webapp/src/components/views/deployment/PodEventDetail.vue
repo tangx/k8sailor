@@ -9,7 +9,7 @@
 
 <script setup lang='ts'>
 import { PropType } from '@vue/runtime-core'
-import client, { Pod, PodEvent } from '../../apis/pod'
+import client, { Pod, PodEvent } from '@/apis/pod'
 
 let props = defineProps({
   pod: {
