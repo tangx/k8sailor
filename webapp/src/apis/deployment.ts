@@ -83,6 +83,29 @@ async function deleteDeploymentByName(namespace: string, name: string): Promise<
 
 }
 
+export interface createDeploymentByNameInput {
+    replicas: number
+    containers: {
+        image: string
+        ports: number[]
+    }[]
+}
+
+interface CreateDeploymentByNameResponse extends HttpcResponse {
+    data: boolean
+}
+async function createDeploymentByName(namespace: string, name: string, input: createDeploymentByNameInput): Promise<CreateDeploymentByNameResponse> {
+    const u = `/deployments/${name}?namespace=${namespace}`
+    // const resp = await httpc.post(u)
+    const resp = await httpc.post(u, input)
+
+    console.log("apppppp", resp.data);
+
+    return resp.data
+}
+
+
+
 // 导出所有方法
 export default {
     getAllDeployments,
@@ -90,4 +113,5 @@ export default {
     getDeploymentPodsByName,
     setDeploymentReplicas,
     deleteDeploymentByName,
+    createDeploymentByName,
 }

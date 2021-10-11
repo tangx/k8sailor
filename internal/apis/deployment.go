@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 	"github.com/tangx/ginbinder"
 	"github.com/tangx/k8sailor/internal/biz/deployment"
 	"github.com/tangx/k8sailor/pkg/confgin/httpresponse"
@@ -63,6 +64,7 @@ func handlerCreateDeploymentByName(c *gin.Context) {
 
 	dep, err := deployment.CreateDeploymentByName(c, input)
 	if err != nil {
+		logrus.Println("error::::>>>>", err)
 		httpresponse.Error(c, http.StatusInternalServerError, err)
 		return
 	}

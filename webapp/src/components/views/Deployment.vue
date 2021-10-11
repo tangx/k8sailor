@@ -1,4 +1,6 @@
 <template>
+  <CreateDeploymentDashboard />
+
   <h3>deployments</h3>
 
   <div>
@@ -55,7 +57,8 @@
 <script setup lang='ts'>
 import { computed, reactive } from '@vue/reactivity'
 import { onMounted, onUnmounted } from '@vue/runtime-core'
-import client, { Deployment } from '../../apis/deployment'
+import client, { Deployment } from '@/apis/deployment'
+import CreateDeploymentDashboard from './deployment/CreateDeploymentDashboard.vue'
 
 // data 页面展示数据
 let data = reactive({
@@ -120,8 +123,8 @@ const depDetailLink = function (item: Deployment): string {
 const deleteDeploymentByname = async function (dep: Deployment) {
   const resp = await client.deleteDeploymentByName(dep.namespace, dep.name)
 
-  if (resp.code!==0){
-    console.log("delete pod failed: ",resp.error);
+  if (resp.code !== 0) {
+    console.log("delete pod failed: ", resp.error);
     return
   }
 }
