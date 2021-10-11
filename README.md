@@ -35,7 +35,7 @@ golang 练习的前后端
 16. [创建 deployment](./docs/16-create-deployment.md)
 17. [Pod 的阶段与状态](./docs/17-pod-phase-and-status.md)
 18. [vue3 - 创建 deployment 页面](./docs/18-vue3-create-deployment.md)
-19. [创建 deployment service](./docs/19-create-service-for-deployment.md)
+19. [创建 deployment service](./docs/19-create-service.md)
 
 ## feed
 
