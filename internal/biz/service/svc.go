@@ -17,6 +17,15 @@ func GetCoreServerByName(ctx context.Context, input GetCoreServerByNameInput) (*
 	return k8sdao.GetServiceByName(ctx, input.Namespace, input.Name)
 }
 
+// CreateServcieByNameInput 参数
+// port example:
+// 	port:= port:targetPort            clusterIp
+// 	port:= !nodePort:port:targetPort  指定 nodePort 值
+// 	port:= !port:targetPort           随机 nodePort 值
+//
+// symbal:
+// 	_blank: clusterIp
+// 	!: nodePort
 type CreateServcieByNameInput struct {
 	Namespace string `query:"namespace"`
 	Name      string `uri:"name"`

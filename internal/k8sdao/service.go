@@ -56,19 +56,17 @@ type Port struct {
 
 // parsePorts convert Simpl Port Phrase to ServicePort
 // port:= !nodePort:port:targetPort
-// port:= !nodePort:port
+// port:= !port:targetPort
 // port:= port:targetPort
 func parsePorts(ports []string) (corev1.ServiceType, []corev1.ServicePort, error) {
 
 	v1ServicePorts := []corev1.ServicePort{}
 
-	isNodePort := false
 	typ := corev1.ServiceTypeClusterIP
 	for _, port := range ports {
 		if port[0] == '!' {
 			typ = corev1.ServiceTypeNodePort
 			port = port[1:]
-			isNodePort = true
 		}
 
 		parts := strings.Split(port, ":")
@@ -77,17 +75,14 @@ func parsePorts(ports []string) (corev1.ServiceType, []corev1.ServicePort, error
 		}
 
 		port := corev1.ServicePort{}
+		if len(parts) == 1 {
+			port.Port = str2Int32(parts[0])
+			port.TargetPort = intstr.Parse(parts[0])
+		}
 		if len(parts) == 2 {
 			port.Port = str2Int32(parts[0])
 			port.TargetPort = intstr.Parse(parts[1])
-
-			if isNodePort {
-				port.NodePort = str2Int32(parts[0])
-				port.Port = str2Int32(parts[1])
-				port.TargetPort = intstr.Parse(parts[1])
-			}
 		}
-
 		if len(parts) > 2 {
 			port.NodePort = str2Int32(parts[0])
 			port.Port = str2Int32(parts[1])
