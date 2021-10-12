@@ -15,4 +15,5 @@ func RootGroup(base *gin.RouterGroup) {
 	// 向 v0 注册 Deployments 路由
 	confgin.AppendGroup(v0, DeploymentRouterGroup)
 	confgin.AppendGroup(v0, PodRouterGroup)
+	confgin.AppendGroup(v0, ServiceRouterGroup)
 }
