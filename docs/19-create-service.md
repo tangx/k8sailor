@@ -118,6 +118,8 @@ externalName service 就是 k8s 集群通过 coredns 实现的 **CNAME** 服务�
 
 无论依赖资源地址是否发生变化（例如 迁移）， 客户端服务都不需要进行任何变更，只需要通过外部配置更新 service 的 externalName 即可完成切换。 
 
+![service-external-name](./assets/img/19/service-external-name.png)
+
 ```bash
 kubectl create service externalname my-ns --external-name www.baidu.com
 ```
