@@ -1,5 +1,8 @@
 # 为 Deployment 创建 Service
 
+> tag: https://github.com/tangx/k8sailor/tree/feat/16-create-deployment
+
+
 
 > https://kubernetes.io/zh/docs/concepts/services-networking/service/#externalname
 
