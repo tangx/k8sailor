@@ -69,6 +69,15 @@ func parsePorts(ports []string, spec *corev1.ServiceSpec) {
 			continue
 		}
 
+		// 0. external service
+		if external, symbal := isExternalName(port); symbal {
+			spec.ClusterIP = ""
+			spec.Type = corev1.ServiceTypeExternalName
+			spec.ExternalName = external
+
+			return
+		}
+
 		// 1. headless service
 		if port, symbal = isHeadless(port); symbal {
 			spec.ClusterIP = "None"
@@ -113,6 +122,8 @@ func str2Int32(s string) int32 {
 	return int32(i)
 }
 
+// 是否为 Headless 服务
+// 以 # 开头: #port:targetPort
 func isHeadless(port string) (_port string, ok bool) {
 	if len(port) == 0 {
 		return "", false
@@ -124,6 +135,8 @@ func isHeadless(port string) (_port string, ok bool) {
 	return port, false
 }
 
+// isNodePort 是否暴露 NodePort
+// 以 ! 开头: !nodePort:port:targetPort
 func isNodePort(port string) (_port string, ok bool) {
 	if len(port) == 0 {
 		return "", false
@@ -133,4 +146,18 @@ func isNodePort(port string) (_port string, ok bool) {
 	}
 
 	return port, false
+}
+
+// isExternalName 是否为 外部域名服务
+// 以 @ 开头 :  @external.com
+func isExternalName(external string) (_external string, ok bool) {
+	if len(external) == 0 {
+		return "", false
+	}
+
+	if external[0] == '@' {
+		return external[1:], true
+	}
+
+	return external, false
 }

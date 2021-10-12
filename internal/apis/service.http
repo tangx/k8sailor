@@ -1,11 +1,33 @@
 
-### Create Service By Name
+### Create Service By Name, Nodeport
 POST http://127.0.0.1:8088/k8sailor/v0/services/demo-nginx-nodeport-11?namespace=default
 Content-Type: application/json
 
 {
     "ports":[
-        "#!80:80"
+        "!80:80"
+    ]
+}
+
+
+### CREATE servcie , Headless
+POST http://127.0.0.1:8088/k8sailor/v0/services/demo-nginx-headless-11?namespace=default
+Content-Type: application/json
+
+{
+    "ports":[
+        "#80:80"
+    ]
+}
+
+### Create service, ExternalName
+POST http://127.0.0.1:8088/k8sailor/v0/services/demo-nginx-externalname-23?namespace=default
+Content-Type: application/json
+
+{
+    "ports":[
+        "#80,80",
+        "@www.baidu.com"
     ]
 }
 

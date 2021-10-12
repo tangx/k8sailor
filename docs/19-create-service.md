@@ -1,5 +1,8 @@
 # 为 Deployment 创建 Service
 
+
+> https://kubernetes.io/zh/docs/concepts/services-networking/service/#externalname
+
 ```bash
 kubectl create service clusterip nginx-web --clusterip="port:targetPort"
 kubectl create service clusterip nginx-web --clusterip="8082:80"
@@ -92,3 +95,71 @@ kubectl create service clusterip my-nginx-web  --clusterip="None" --tcp=8088:80
 
 ## external name
 
+externalName service 就是 k8s 集群通过 coredns 实现的 **CNAME** 服务， 从而实现了 **在集群内部不依赖外部地址** 的内聚效果。
+
+无论依赖资源地址是否发生变化（例如 迁移）， 客户端服务都不需要进行任何变更，只需要通过外部配置更新 service 的 externalName 即可完成切换。 
+
+```bash
+kubectl create service externalname my-ns --external-name www.baidu.com
+```
+
+```yaml
+# kgs my-ns -o yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: my-ns
+  name: my-ns
+  namespace: default
+spec:
+  externalName: www.baidu.com
+  # selector:   # external 是不需要选择器的
+  #   app: my-ns
+  sessionAffinity: None
+  type: ExternalName
+```
+
+通过 ping 命令可以看到， `my-ns` 和 `www.baidu.com` 结果是一样的。
+
+```bash
+# ping my-ns
+PING www.a.shifen.com (110.242.68.4) 56(84) bytes of data.
+64 bytes from 110.242.68.4 (110.242.68.4): icmp_seq=1 ttl=48 time=12.2 ms
+64 bytes from 110.242.68.4 (110.242.68.4): icmp_seq=2 ttl=48 time=12.1 ms
+
+# ping www.baidu.com
+PING www.a.shifen.com (110.242.68.3) 56(84) bytes of data.
+64 bytes from 110.242.68.3 (110.242.68.3): icmp_seq=1 ttl=48 time=11.2 ms
+64 bytes from 110.242.68.3 (110.242.68.3): icmp_seq=2 ttl=48 time=11.2 ms
+```
+
+### 解析 externalName
+
+由于 externalName 是完全的 DNS 行为。 1. 没有 pod 映射， 2. 也不需要 label selector 选择后端的提供服务的 Pod。 因此， 之前的 **port:targetPort** 规则也就用不上了。
+
+对于 externalName 引入了新的符号 **at `@`** ， `@` 本身也有 **到、去** 目的地的意思。
+
+```go
+@external.name
+```
+
+
+## 总结
+
+```bash
+# k create service --help
+Available Commands:
+  clusterip    Create a ClusterIP service.
+  externalname Create an ExternalName service.
+  loadbalancer 创建一个 LoadBalancer service.
+  nodeport     创建一个 NodePort service.
+```
+
+自此 kubectl 创建 service 常用的几个子命令已经实现了。
+
+1. clusterip:
+    + normal: `port:targetPort`
+    + headless: `#port:targetPort`
+2. externalname: `@external.com`
+3. nodeport: `!nodeport:port:targetPort`
