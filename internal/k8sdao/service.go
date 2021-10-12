@@ -47,16 +47,11 @@ func serviceSpec(name string, ports []string) corev1.ServiceSpec {
 	return spec
 }
 
-type Port struct {
-	NodePort   string
-	Port       string
-	TargetPort string
-}
-
 // parsePorts convert Simpl Port Phrase to ServicePort
 // port:= !nodePort:port:targetPort
-// port:= !port:targetPort
-// port:= port:targetPort,None
+// port:= port:targetPort
+// port:= #port:targetPort
+// port:= @external.com
 func parsePorts(ports []string, spec *corev1.ServiceSpec) {
 
 	typ := corev1.ServiceTypeClusterIP
