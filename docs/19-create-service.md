@@ -178,4 +178,6 @@ Available Commands:
     + normal: `port:targetPort`
     + headless: `#port:targetPort`
 2. externalname: `@external.com`
-3. nodeport: `!nodeport:port:targetPort`
+3. nodeport:
+    + 指定 nodePort 端口: `!nodeport:port:targetPort`
+    + 随机 nodePort 端口: `!port:targetPort`
