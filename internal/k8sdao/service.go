@@ -36,15 +36,14 @@ func GetServiceByName(ctx context.Context, namespace string, name string) (*core
 }
 
 func serviceSpec(name string, ports []string) corev1.ServiceSpec {
-	typ, servicePorts, _ := parsePorts(ports)
+
 	spec := corev1.ServiceSpec{
 		Selector: map[string]string{
 			"app": name,
 		},
-		Type:  typ,
-		Ports: servicePorts,
 	}
 
+	parsePorts(ports, &spec)
 	return spec
 }
 
@@ -57,43 +56,52 @@ type Port struct {
 // parsePorts convert Simpl Port Phrase to ServicePort
 // port:= !nodePort:port:targetPort
 // port:= !port:targetPort
-// port:= port:targetPort
-func parsePorts(ports []string) (corev1.ServiceType, []corev1.ServicePort, error) {
-
-	v1ServicePorts := []corev1.ServicePort{}
+// port:= port:targetPort,None
+func parsePorts(ports []string, spec *corev1.ServiceSpec) {
 
 	typ := corev1.ServiceTypeClusterIP
-	for _, port := range ports {
-		if port[0] == '!' {
-			typ = corev1.ServiceTypeNodePort
-			port = port[1:]
-		}
+	v1Ports := []corev1.ServicePort{}
 
-		parts := strings.Split(port, ":")
-		if len(parts) < 2 {
+	for _, port := range ports {
+		symbal := false
+
+		if len(port) == 0 {
 			continue
 		}
 
-		port := corev1.ServicePort{}
+		// 1. headless service
+		if port, symbal = isHeadless(port); symbal {
+			spec.ClusterIP = "None"
+		}
+
+		// 2. nodePort:port:targetPort
+		if port, symbal = isNodePort(port); symbal {
+			typ = corev1.ServiceTypeNodePort
+		}
+
+		// 3. handle ports mapping
+		parts := strings.Split(port, ":")
+		v1Port := corev1.ServicePort{}
 		if len(parts) == 1 {
-			port.Port = str2Int32(parts[0])
-			port.TargetPort = intstr.Parse(parts[0])
+			v1Port.Port = str2Int32(parts[0])
+			v1Port.TargetPort = intstr.Parse(parts[0])
 		}
 		if len(parts) == 2 {
-			port.Port = str2Int32(parts[0])
-			port.TargetPort = intstr.Parse(parts[1])
+			v1Port.Port = str2Int32(parts[0])
+			v1Port.TargetPort = intstr.Parse(parts[1])
 		}
 		if len(parts) > 2 {
-			port.NodePort = str2Int32(parts[0])
-			port.Port = str2Int32(parts[1])
-			port.TargetPort = intstr.Parse(parts[2])
+			v1Port.NodePort = str2Int32(parts[0])
+			v1Port.Port = str2Int32(parts[1])
+			v1Port.TargetPort = intstr.Parse(parts[2])
 		}
 
-		port.Name = fmt.Sprintf("%d-%s", port.Port, port.TargetPort.String())
-		v1ServicePorts = append(v1ServicePorts, port)
+		v1Port.Name = fmt.Sprintf("%d-%s", v1Port.Port, v1Port.TargetPort.String())
+		v1Ports = append(v1Ports, v1Port)
 	}
 
-	return typ, v1ServicePorts, nil
+	spec.Type = typ
+	spec.Ports = v1Ports
 }
 
 func str2Int32(s string) int32 {
@@ -103,4 +111,26 @@ func str2Int32(s string) int32 {
 	}
 
 	return int32(i)
+}
+
+func isHeadless(port string) (_port string, ok bool) {
+	if len(port) == 0 {
+		return "", false
+	}
+	if port[0] == '#' {
+		return port[1:], true
+	}
+
+	return port, false
+}
+
+func isNodePort(port string) (_port string, ok bool) {
+	if len(port) == 0 {
+		return "", false
+	}
+	if port[0] == '!' {
+		return port[1:], true
+	}
+
+	return port, false
 }

@@ -47,7 +47,7 @@ type ServicePort struct {
 
 在 **apimachinery`(k8s.io/apimachinery@v0.21.4/pkg/util/)`** 包中， 提供了很多针对 k8s 对象的常用方法。 
 
-### 精简定义 port
+### 解析 port
 
 为了能简化 api 请求的参数， 因此对 clusterIp 和 nodePort 使用了符号表示： 默认为 clusterIp， 如果有 **叹号`!`** 则为 nodePort。
 
@@ -69,6 +69,26 @@ port:targetPort // clusterIp, port 与 targetPort 可能不一致
 ![service-headless](./assets/img/19/service-headless.png)
 
 使用 `headless` 之后， k8s 将不再创建 `service` 进行 pod 的负载均衡。 取而代之的是 **DNS** 将每个 pod 直接解析暴露， 域名规则 `podName.serviceName.namespace.Cluster`
+
+
+### 解析 Headless Port
+
+```bash
+kubectl create service clusterip my-nginx-web  --clusterip="None" --tcp=8088:80
+```
+
+从 kubectl 的命令中可以看到， `Headless Service` 可以被认为 `clusterip` 的一个子类， 其特殊之处就是 `ClusterIp: None`
+
+鉴于此， 对之前的 Port 规则进行了一定扩展。 
+
+规则基本类似， 采用了的新的符号 `#` 表示 Headless 服务。 `#` 在很多地方表示注释， 注释对外看不见，因此用以表示 `Headless`。
+
+```go
+#port:targetPort // headless 
+```
+
+本身 **NodePort 和 Headless** 就是不兼容的， 由于 `#, !` 在同一个位置， 也一定程度上避免了 **误写**
+
 
 ## external name
 

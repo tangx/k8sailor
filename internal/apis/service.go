@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 	"github.com/tangx/ginbinder"
 	"github.com/tangx/k8sailor/internal/biz/service"
 	"github.com/tangx/k8sailor/pkg/confgin/httpresponse"
@@ -41,6 +42,7 @@ func createServiceByName(c *gin.Context) {
 
 	svc, err := service.CreateServiceByName(c, input)
 	if err != nil {
+		logrus.Errorln(err)
 		httpresponse.Error(c, http.StatusInternalServerError, err)
 		return
 	}
