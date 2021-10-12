@@ -71,8 +71,24 @@ port:targetPort // clusterIp, port 与 targetPort 可能不一致
 
 ![service-headless](./assets/img/19/service-headless.png)
 
-使用 `headless` 之后， k8s 将不再创建 `service` 进行 pod 的负载均衡。 取而代之的是 **DNS** 将每个 pod 直接解析暴露， 域名规则 `podName.serviceName.namespace.Cluster`
+使用 `headless` 之后， k8s 将不再创建 `service` 进行 pod 的负载均衡。 取而代之的是 **DNS** 将每个 pod 直接解析暴露， 域名规则 `podName.serviceName.namespace.Cluster`。
 
+> 注意: statefuleSet 对与绑定的 serviceName 是有强力约束的。 只有匹配名字的 service 才能提供响应的服务。
+
+```yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: web
+spec:
+  selector:
+    matchLabels:
+      app: nginx 
+  serviceName: "nginx" # 约束只能匹配名为 `nginx` 的 service
+  replicas: 3
+  template:
+  # .... 省略
+```
 
 ### 解析 Headless Port
 
