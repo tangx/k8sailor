@@ -68,7 +68,7 @@ port:targetPort // clusterIp, port 与 targetPort 可能不一致
 
 ![service-headless](./assets/img/19/service-headless.png)
 
-使用 `headless` 之后， k8s 将不再创建 `service` 进行 pod 的负载均衡。 取而代之的是 **DNS** 将每个 pod 直接解析暴露， 域名规则 `podName.statefulsetName.namespace.Cluster`
+使用 `headless` 之后， k8s 将不再创建 `service` 进行 pod 的负载均衡。 取而代之的是 **DNS** 将每个 pod 直接解析暴露， 域名规则 `podName.serviceName.namespace.Cluster`
 
 ## external name
 
