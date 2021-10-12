@@ -1,6 +1,6 @@
 # 为 Deployment 创建 Service
 
-> tag: https://github.com/tangx/k8sailor/tree/feat/16-create-deployment
+> tag: https://github.com/tangx/k8sailor/tree/feat/19-create-service
 
 
 
