@@ -16,4 +16,5 @@ func RootGroup(base *gin.RouterGroup) {
 	confgin.AppendGroup(v0, DeploymentRouterGroup)
 	confgin.AppendGroup(v0, PodRouterGroup)
 	confgin.AppendGroup(v0, ServiceRouterGroup)
+	confgin.AppendGroup(v0, IngressRouterGroup)
 }
