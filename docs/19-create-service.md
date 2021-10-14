@@ -186,3 +186,23 @@ Available Commands:
 3. nodeport:
     + 指定 nodePort 端口: `!nodeport:port:targetPort`
     + 随机 nodePort 端口: `!port:targetPort`
+
+### demo
+
+services 中的参数互斥， 不能共用。
+
+```bash
+### CREATE servcie , Headless
+POST http://127.0.0.1:8088/k8sailor/v0/services/demo-nginx-211?namespace=default
+Content-Type: application/json
+
+{
+    "services":[
+        "80:8088",         # clusterip
+        "#80:80",          # headless
+        "!31234:80:8088",  # nodeport
+        "@www.baidu.com",  # external name
+    ]
+}
+```
+

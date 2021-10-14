@@ -30,12 +30,12 @@ type CreateServcieByNameInput struct {
 	Namespace string `query:"namespace"`
 	Name      string `uri:"name"`
 	Body      struct {
-		Ports []string `json:"ports"`
+		Services []string `json:"services"`
 	} `body:"" mime:"json"`
 }
 
 func CreateServiceByName(ctx context.Context, input CreateServcieByNameInput) (*corev1.Service, error) {
-	v1svc, err := k8sdao.CreateServcieByName(ctx, input.Namespace, input.Name, input.Body.Ports)
+	v1svc, err := k8sdao.CreateServcieByName(ctx, input.Namespace, input.Name, input.Body.Services)
 	if err != nil {
 		return nil, err
 	}
