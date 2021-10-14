@@ -10,7 +10,8 @@ func Test_parseEndpoint(t *testing.T) {
 	uRLs := []string{
 		"http://www.baidu.com:80/v0/api?ns=default",
 		"http://www.baidu.com/v1/api*?ns=default2",
-		"https://querycap.feishu.cn/docs/doccnQO4cxBOZ67wqzC0EVlT3Kg#",
+		"http://:8080/download",
+		"http:///download",
 	}
 
 	for _, uRL := range uRLs {
