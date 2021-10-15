@@ -44,7 +44,7 @@ func CreateIngressByName(ctx context.Context, namespace string, name string, bac
 	return ing, err
 }
 
-// getMeta 返回 ingress Meta 信息
+// genIngressMeta 返回 ingress Meta 信息
 func genIngressMeta(ns string, name string) metav1.ObjectMeta {
 	return metav1.ObjectMeta{
 		Name:      name,
@@ -52,6 +52,7 @@ func genIngressMeta(ns string, name string) metav1.ObjectMeta {
 	}
 }
 
+// genIngressSpec 返回 ingress spec 信息
 func genIngressSpec(name string, endpoints []string) (*netv1.IngressSpec, error) {
 	v1Rules := []netv1.IngressRule{}
 	v1TLSs := []netv1.IngressTLS{}
@@ -120,6 +121,7 @@ func getIngressTLS(host string, secret string) *netv1.IngressTLS {
 		return nil
 	}
 
+	host = getHost(host)
 	return &netv1.IngressTLS{
 		Hosts:      []string{host},
 		SecretName: secret,
@@ -152,7 +154,7 @@ func getIngressPaths(path string, service string) []netv1.HTTPIngressPath {
 // hostWithPort: www.baidu.com:80
 func getHost(hostWithPort string) string {
 	parts := strings.Split(hostWithPort, ":")
-	if len(parts) == 0 {
+	if len(parts) == 1 {
 		return ""
 	}
 	return parts[0]
