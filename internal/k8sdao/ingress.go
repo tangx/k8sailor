@@ -29,8 +29,10 @@ func CreateIngressByName(ctx context.Context, namespace string, name string, bac
 	if err != nil {
 		return nil, err
 	}
+	meta := genIngressMeta(namespace, name)
+
 	ing := &netv1.Ingress{
-		ObjectMeta: genIngressMeta(namespace, name),
+		ObjectMeta: meta,
 		Spec:       *spec,
 	}
 
