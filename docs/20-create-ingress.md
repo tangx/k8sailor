@@ -1,5 +1,10 @@
 # 创建 ingress
 
+> tag: https://github.com/tangx/k8sailor/tree/feat/20-create-ingress
+
+
+## k8s ingress
+
 > https://kubernetes.io/zh/docs/concepts/services-networking/ingress/
 
 ```bash
