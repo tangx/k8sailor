@@ -21,7 +21,7 @@ Pod 的 Status 需要根据  Pod 中的 `ContainerStatuses` 进行计算得到�
 `Failed`（失败） | Pod 中的所有容器都已终止，并且至少有一个容器是因为失败终止。也就是说，容器以非 0 状态退出或者被系统终止。
 `Unknown`（未知） | 因为某些原因无法取得 Pod 的状态。这种情况通常是因为与 Pod 所在主机通信失败。
 
-![pod lifecycle](./docs/assets/img/17/pod-lifecycle.png)
+![pod lifecycle](./assets/img/17/pod-lifecycle.png)
 
 
 其中 `Running` 阶段包含了很多行为， 如 **1. 下载镜像，2. 启动并初始化，3. 对外提供服务**， 而通常认为的 Pod 处于正常服务状态（1. 能接受请求或发送请求， 2. pod 不退出） 只能该阶段的一部分，算 **3.对外提供服务**。
