@@ -1,0 +1,14 @@
+### GET ingress
+GET http://127.0.0.1:8088/k8sailor/v0/ingresses/ingdefault/output?namespace=default
+
+
+
+### Post ingress
+POST http://127.0.0.1:8088/k8sailor/v0/ingresses/my-nginx-1000?namespace=default
+Content-Type: application/json
+
+{
+    "endpoints":[
+        "http://:1000/v1/api/*?backend=svc-google:443"
+    ]
+}
