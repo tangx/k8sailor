@@ -5,8 +5,10 @@
 
   <div>
     <label>namespace</label>
-    <input type="text" placeholder="default" v-model="data.namespace" />
-    <button @click="getAllByNamespace(data.namespace)">更新数据</button>
+    <input type="text" :placeholder="currentNamespace" v-model="data.namespace" />
+    <a :href="computedAHrefLink" @click="getAllByNamespace()">
+      <button>更新数据</button>
+    </a>
   </div>
 
   <!-- 当数据异常的时候显示 -->
@@ -59,14 +61,20 @@ import { computed, reactive } from '@vue/reactivity'
 import { onMounted, onUnmounted } from '@vue/runtime-core'
 import client, { Deployment } from '@/apis/deployment'
 import CreateDeploymentDashboard from './deployment/CreateDeploymentDashboard.vue'
+import { useRouter } from "vue-router";
+
+const router = useRouter()
 
 // data 页面展示数据
 let data = reactive({
-  namespace: "default",
+  namespace: "",
   error: "",
   items: [] as Deployment[]
 })
 
+
+// 根据当前 url 获取 namespace 
+const currentNamespace=router.currentRoute.value.query.namespace as string
 
 // Switcher 开关
 let Switcher = reactive({
@@ -75,8 +83,10 @@ let Switcher = reactive({
 
 
 // getAll 返回所有 deployment 清单
-const getAllByNamespace = async function (namespace = "default") {
-  const resp = await client.getAllDeployments(namespace)
+const getAllByNamespace = async function () {
+
+ 
+  const resp = await client.getAllDeployments(currentNamespace)
 
   // 对数组进行排序， 避免返回结果数据相同但顺序不同时， vue 不断重新渲染。
   let _items = resp.data.sort(
@@ -99,7 +109,7 @@ const getAllByNamespace = async function (namespace = "default") {
 
 const getAllByNamespaceLoop = async function () {
   while (Switcher.LoopData) {
-    let f = getAllByNamespace("default")
+    let f = getAllByNamespace()
     await new Promise(f => setTimeout(f, 2000));
   }
 }
@@ -128,6 +138,11 @@ const deleteDeploymentByname = async function (dep: Deployment) {
     return
   }
 }
+
+// 获取跳转页面的计算属性
+const computedAHrefLink=computed(
+  ()=> `/deployments?namespace=${data.namespace}`
+)
 
 onMounted(() => {
   Switcher.LoopData = true
