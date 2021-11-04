@@ -73,8 +73,14 @@ let data = reactive({
 })
 
 
-// 根据当前 url 获取 namespace 
-const currentNamespace=router.currentRoute.value.query.namespace as string
+// 根据当前 url 获取 namespace, 并设置默认值
+const currentNamespace = function (): string {
+  let ns = router.currentRoute.value.query.namespace as string
+  if (!ns) { // ns = undefined
+    ns = "kube-system"
+  }
+  return ns
+}()
 
 // Switcher 开关
 let Switcher = reactive({
@@ -85,7 +91,7 @@ let Switcher = reactive({
 // getAll 返回所有 deployment 清单
 const getAllByNamespace = async function () {
 
- 
+
   const resp = await client.getAllDeployments(currentNamespace)
 
   // 对数组进行排序， 避免返回结果数据相同但顺序不同时， vue 不断重新渲染。
@@ -140,8 +146,8 @@ const deleteDeploymentByname = async function (dep: Deployment) {
 }
 
 // 获取跳转页面的计算属性
-const computedAHrefLink=computed(
-  ()=> `/deployments?namespace=${data.namespace}`
+const computedAHrefLink = computed(
+  () => `/deployments?namespace=${data.namespace}`
 )
 
 onMounted(() => {

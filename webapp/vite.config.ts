@@ -8,7 +8,7 @@ import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    base: '/k8sailor/webapp/dist/',
+    // base: '/k8sailor/webapp/dist/',
     // resolv 对象中配置
     resolve: {
         // 别名配置
