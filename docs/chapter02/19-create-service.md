@@ -22,7 +22,7 @@ demo-nginx-nodeport-3   NodePort    10.43.181.29    <none>        80:32425/TCP  
 
 ## port, targetPort, nodePort
 
-![nodeport-port-targetport](./assets/img/19/nodeport-port-targetport.png)
+![nodeport-port-targetport](../assets/img/19/nodeport-port-targetport.png)
 
 端口映射中的四个 **比较关键** 的要素:
 
@@ -72,7 +72,7 @@ port:targetPort // clusterIp, port 与 targetPort 可能不一致
 
 > https://kubernetes.io/zh/docs/concepts/workloads/controllers/statefulset/
 
-![service-headless](./assets/img/19/service-headless.png)
+![service-headless](../assets/img/19/service-headless.png)
 
 使用 `headless` 之后， k8s 将不再创建 `service` 进行 pod 的负载均衡。 取而代之的是 **DNS** 将每个 pod 直接解析暴露， 域名规则 `podName.serviceName.namespace.Cluster`。
 
@@ -118,7 +118,7 @@ externalName service 就是 k8s 集群通过 coredns 实现的 **CNAME** 服务�
 
 无论依赖资源地址是否发生变化（例如 迁移）， 客户端服务都不需要进行任何变更，只需要通过外部配置更新 service 的 externalName 即可完成切换。 
 
-![service-external-name](./assets/img/19/service-external-name.png)
+![service-external-name](../assets/img/19/service-external-name.png)
 
 ```bash
 kubectl create service externalname my-ns --external-name www.baidu.com
