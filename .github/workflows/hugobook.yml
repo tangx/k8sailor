@@ -55,4 +55,4 @@ jobs:
           destination-repository-name: 'hugobook'
           user-email: uyinn@live.com
           target-branch: master
-          target-directory: '/kustz'
+          target-directory: '/k8sailor'
