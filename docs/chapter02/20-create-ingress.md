@@ -106,7 +106,7 @@ http://www.example.com:20080/v1/api/*?backend=svc-google:443&tls=google-tls
 
 这里的 port 其实并没有用， 保留设计只是为了 **标识** 外部入口使用的端口。 这种情况在云上遇到的不多， 但在一些实施项目上由于可能会遇到，例如域名没有备案。
 
-![ingress 非标准端口转发](../assets/img/20/ingress-not-standard-port-transport.png)
+![ingress 非标准端口转发](/docs/assets/img/20/ingress-not-standard-port-transport.png)
 
 #### backend service 默认值
 
