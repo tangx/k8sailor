@@ -1,4 +1,4 @@
-baseURL = "https://books.tangx.in/k8sailor/"
+baseURL = "https://tangx.in/books/k8sailor/"
 title = "k8sailor: 自己写一个 Kubernetes 控制台"
 theme = "hugo-geekdoc"
 
